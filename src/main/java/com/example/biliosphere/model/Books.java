@@ -1,8 +1,7 @@
 package com.example.biliosphere.model;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 
 @Entity
@@ -12,23 +11,27 @@ public class Books {
     @Column(name = "BookId")
     private Long id;
 
-    @Column(name = "Title ",nullable = false,length = 255)
+    @Column(name = "Title", nullable = false, length = 255)
     private String judul;
 
-    @Column(name = "Author",nullable = false,length = 100)
+    @Column(name = "Author", nullable = false, length = 100)
     private String penulis;
 
-    @Column(name = "CategoryId",nullable = false)
-    private Integer idKategori;
-
-    @Column(name = "ISBN",nullable = false,unique = true)
+    @Column(name = "ISBN", nullable = false, unique = true)
     private String isbn;
 
     @Column(name = "PublishedYear")
     private Integer tahunTerbit;
 
-    @Column(name = "Quantity",nullable = false)
+    @Column(name = "Quantity", nullable = false)
     private Integer quantity = 0;
+
+    @ManyToOne
+    @JoinColumn(name = "CategoryId", nullable = false, insertable = false, updatable = false)
+    private Categories category;
+
+    @OneToMany(mappedBy = "book")
+    private List<LoansDetail> loanDetails;
 
     public Long getId() {
         return id;
@@ -54,14 +57,6 @@ public class Books {
         this.penulis = penulis;
     }
 
-    public Integer getIdKategori() {
-        return idKategori;
-    }
-
-    public void setIdKategori(Integer idKategori) {
-        this.idKategori = idKategori;
-    }
-
     public String getIsbn() {
         return isbn;
     }
@@ -84,5 +79,21 @@ public class Books {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public Categories getCategory() {
+        return category;
+    }
+
+    public void setCategory(Categories category) {
+        this.category = category;
+    }
+
+    public List<LoansDetail> getLoanDetails() {
+        return loanDetails;
+    }
+
+    public void setLoanDetails(List<LoansDetail> loanDetails) {
+        this.loanDetails = loanDetails;
     }
 }

@@ -1,11 +1,9 @@
 package com.example.biliosphere.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /*
 IntelliJ IDEA 2024.3 (Ultimate Edition)
@@ -23,8 +21,9 @@ public class Loans {
     @Column(name = "Id")
     private Long id;
 
-    @Column(name = "UserId",nullable = false)
-    private Integer idUser;
+    @ManyToOne
+    @JoinColumn(name = "UserId", nullable = false, insertable = false, updatable = false)
+    private Users user;
 
     @Column(name = "LoanDate", nullable = false)
     private LocalDateTime loanDate;
@@ -32,23 +31,29 @@ public class Loans {
     @Column(name = "DueDate", nullable = false)
     private LocalDateTime dueDate;
 
-    @Column(name = "Status",nullable = false)
+    @Column(name = "Status", nullable = false)
     private String status;
 
-    public Long  getId() {
+    @OneToMany(mappedBy = "loan")
+    private List<LoansDetail> loanDetails;
+
+    @OneToMany(mappedBy = "loan")
+    private List<Returns> returns;
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Long  id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Integer getIdUser() {
-        return idUser;
+    public Users getUser() {
+        return user;
     }
 
-    public void setIdUser(Integer idUser) {
-        this.idUser = idUser;
+    public void setUser(Users user) {
+        this.user = user;
     }
 
     public LocalDateTime getLoanDate() {
@@ -73,5 +78,21 @@ public class Loans {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public List<LoansDetail> getLoanDetails() {
+        return loanDetails;
+    }
+
+    public void setLoanDetails(List<LoansDetail> loanDetails) {
+        this.loanDetails = loanDetails;
+    }
+
+    public List<Returns> getReturns() {
+        return returns;
+    }
+
+    public void setReturns(List<Returns> returns) {
+        this.returns = returns;
     }
 }

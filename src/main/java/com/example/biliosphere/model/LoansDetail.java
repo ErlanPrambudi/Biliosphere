@@ -1,9 +1,6 @@
 package com.example.biliosphere.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 /*
 IntelliJ IDEA 2024.3 (Ultimate Edition)
@@ -21,13 +18,15 @@ public class LoansDetail {
     @Column(name = "LoanDetailId")
     private Long id;
 
-    @Column(name = "LoanID",nullable = false)
-    private Integer idLoan;
+    @ManyToOne
+    @JoinColumn(name = "LoanID", nullable = false, insertable = false, updatable = false)
+    private Loans loan;
 
-    @Column(name = "BookId",nullable = false)
-    private Integer idBook;
+    @ManyToOne
+    @JoinColumn(name = "BookId", nullable = false, insertable = false, updatable = false)
+    private Books book;
 
-    @Column(name = "Quantity",nullable = false)
+    @Column(name = "Quantity", nullable = false)
     private Integer quantity;
 
     public Long getId() {
@@ -38,20 +37,20 @@ public class LoansDetail {
         this.id = id;
     }
 
-    public Integer getIdLoan() {
-        return idLoan;
+    public Loans getLoan() {
+        return loan;
     }
 
-    public void setIdLoan(Integer idLoan) {
-        this.idLoan = idLoan;
+    public void setLoan(Loans loan) {
+        this.loan = loan;
     }
 
-    public Integer getIdBook() {
-        return idBook;
+    public Books getBook() {
+        return book;
     }
 
-    public void setIdBook(Integer idBook) {
-        this.idBook = idBook;
+    public void setBook(Books book) {
+        this.book = book;
     }
 
     public Integer getQuantity() {

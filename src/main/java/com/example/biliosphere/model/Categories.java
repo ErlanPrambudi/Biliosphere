@@ -1,19 +1,10 @@
 package com.example.biliosphere.model;
 
-/*
-IntelliJ IDEA 2024.3 (Ultimate Edition)
-Build #IU-243.21565.193, built on November 13, 2024
-@Author Dell Erlan Prambudi
-Java Developer
-Created on 1/8/2025 5:09 PM
-@Last Modified 1/8/2025 5:09 PM
-Version 1.0
-*/
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "MstCategory")
@@ -23,8 +14,11 @@ public class Categories {
     @Column(name = "CategoryId")
     private Long id;
 
-    @Column(name = "CategoryName",unique = true,nullable = false,length = 20)
+    @Column(name = "CategoryName", unique = true, nullable = false, length = 20)
     private String namaCategory;
+
+    @OneToMany(mappedBy = "category")
+    private List<Books> books;
 
     public Long getId() {
         return id;
@@ -40,5 +34,13 @@ public class Categories {
 
     public void setNamaCategory(String namaCategory) {
         this.namaCategory = namaCategory;
+    }
+
+    public List<Books> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Books> books) {
+        this.books = books;
     }
 }

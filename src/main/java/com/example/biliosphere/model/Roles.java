@@ -1,9 +1,8 @@
 package com.example.biliosphere.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
+import java.util.Set;
 
 /*
 IntelliJ IDEA 2024.3 (Ultimate Edition)
@@ -21,8 +20,11 @@ public class Roles {
     @Column(name = "Id")
     private Long id;
 
-    @Column(name = "RoleName",unique = true,nullable = false,length = 20)
+    @Column(name = "RoleName", unique = true, nullable = false, length = 20)
     private String name;
+
+    @ManyToMany(mappedBy = "roles")
+    private Set<Users> users;
 
     public Long getId() {
         return id;
@@ -38,5 +40,13 @@ public class Roles {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<Users> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<Users> users) {
+        this.users = users;
     }
 }

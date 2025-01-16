@@ -1,9 +1,6 @@
 package com.example.biliosphere.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -24,11 +21,12 @@ public class Returns {
     @Column(name = "ReturnId")
     private Long id;
 
-    @Column(name = "LoanID",nullable = false)
-    private Long idLoan;
+    @ManyToOne
+    @JoinColumn(name = "LoanID", nullable = false, insertable = false, updatable = false)
+    private Loans loan;
 
-    @Column(name = "ReturnDate",nullable = false)
-     private LocalDate returnDate;
+    @Column(name = "ReturnDate", nullable = false)
+    private LocalDate returnDate;
 
     @Column(name = "Fine", nullable = false, precision = 10, scale = 2)
     private BigDecimal fine = BigDecimal.ZERO;
@@ -41,12 +39,12 @@ public class Returns {
         this.id = id;
     }
 
-    public Long getIdLoan() {
-        return idLoan;
+    public Loans getLoan() {
+        return loan;
     }
 
-    public void setIdLoan(Long idLoan) {
-        this.idLoan = idLoan;
+    public void setLoan(Loans loan) {
+        this.loan = loan;
     }
 
     public LocalDate getReturnDate() {
@@ -64,5 +62,4 @@ public class Returns {
     public void setFine(BigDecimal fine) {
         this.fine = fine;
     }
-
 }
