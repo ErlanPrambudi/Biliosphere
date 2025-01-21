@@ -19,7 +19,7 @@ Version 1.0
 public class Returns {
     @Id
     @Column(name = "ReturnId")
-    private Long id;
+    private String id;
 
     @ManyToOne
     @JoinColumn(name = "LoanID", nullable = false, insertable = false, updatable = false)
@@ -31,11 +31,11 @@ public class Returns {
     @Column(name = "Fine", nullable = false, precision = 10, scale = 2)
     private BigDecimal fine = BigDecimal.ZERO;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

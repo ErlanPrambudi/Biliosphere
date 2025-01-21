@@ -20,7 +20,7 @@ Version 1.0
 public class Users {
     @Id
     @Column(name = "Id")
-    private Long id;
+    private String id;
 
     @Column(name = "Name", nullable = false)
     private String nama;
@@ -33,6 +33,10 @@ public class Users {
 
     @Column(name = "Email", nullable = false, length = 50)
     private String email;
+
+    @Column(name = "Password", nullable = false, length = 50)
+    private String password;
+
 
     @Column(name = "RegistrationDate", nullable = false)
     private LocalDate tanggalDaftar;
@@ -57,11 +61,55 @@ public class Users {
     )
     private Set<Roles> roles;
 
-    public Long getId() {
+    @Column(name = "CreatedBy",updatable = false,nullable = false)
+    private String createdBy;
+
+    @Column(name = "CreatedDate",updatable = false,nullable = false)
+    private LocalDate createdDate =LocalDate.now();
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public LocalDate getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getUpdateBy() {
+        return updateBy;
+    }
+
+    public void setUpdateBy(String updateBy) {
+        this.updateBy = updateBy;
+    }
+
+    public LocalDate getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(LocalDate updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    @Column(name = "UpdateBy",insertable = false)
+    private String updateBy;
+
+    @Column(name = "UpdatedDate",insertable = false)
+    private LocalDate updatedDate = LocalDate.now();
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -127,5 +175,13 @@ public class Users {
 
     public void setRoles(Set<Roles> roles) {
         this.roles = roles;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

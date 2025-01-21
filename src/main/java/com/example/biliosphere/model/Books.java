@@ -1,4 +1,5 @@
 package com.example.biliosphere.model;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
 public class Books {
     @Id
     @Column(name = "BookId")
-    private Long id;
+    private String id;
 
     @Column(name = "Title", nullable = false, length = 255)
     private String judul;
@@ -17,27 +18,38 @@ public class Books {
     @Column(name = "Author", nullable = false, length = 100)
     private String penulis;
 
+    @Column(name = "Publisher", nullable = false, length = 100)
+    private String penerbit;
+
     @Column(name = "ISBN", nullable = false, unique = true)
     private String isbn;
 
     @Column(name = "PublishedYear")
     private Integer tahunTerbit;
 
-    @Column(name = "Quantity", nullable = false)
-    private Integer quantity = 0;
+    @Column(name = "Description")
+    private String deskripsi;
+
+    @Column(name = "Image", nullable = false)
+    private String gambar;
+
+    @Column(name = "Quantity")
+    private Integer quantity;
 
     @ManyToOne
-    @JoinColumn(name = "CategoryId", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "CategoryId", nullable = false)
+//   @JsonManagedReference
     private Categories category;
 
     @OneToMany(mappedBy = "book")
     private List<LoansDetail> loanDetails;
 
-    public Long getId() {
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -57,6 +69,14 @@ public class Books {
         this.penulis = penulis;
     }
 
+    public String getPenerbit() {
+        return penerbit;
+    }
+
+    public void setPenerbit(String penerbit) {
+        this.penerbit = penerbit;
+    }
+
     public String getIsbn() {
         return isbn;
     }
@@ -71,6 +91,22 @@ public class Books {
 
     public void setTahunTerbit(Integer tahunTerbit) {
         this.tahunTerbit = tahunTerbit;
+    }
+
+    public String getDeskripsi() {
+        return deskripsi;
+    }
+
+    public void setDeskripsi(String deskripsi) {
+        this.deskripsi = deskripsi;
+    }
+
+    public String getGambar() {
+        return gambar;
+    }
+
+    public void setGambar(String gambar) {
+        this.gambar = gambar;
     }
 
     public Integer getQuantity() {

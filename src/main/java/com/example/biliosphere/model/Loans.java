@@ -19,7 +19,7 @@ Version 1.0
 public class Loans {
     @Id
     @Column(name = "Id")
-    private Long id;
+    private String id;
 
     @ManyToOne
     @JoinColumn(name = "UserId", nullable = false, insertable = false, updatable = false)
@@ -40,11 +40,11 @@ public class Loans {
     @OneToMany(mappedBy = "loan")
     private List<Returns> returns;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

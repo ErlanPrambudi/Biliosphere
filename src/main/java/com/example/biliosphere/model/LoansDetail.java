@@ -16,7 +16,7 @@ Version 1.0
 public class LoansDetail {
     @Id
     @Column(name = "LoanDetailId")
-    private Long id;
+    private String id;
 
     @ManyToOne
     @JoinColumn(name = "LoanID", nullable = false, insertable = false, updatable = false)
@@ -26,14 +26,19 @@ public class LoansDetail {
     @JoinColumn(name = "BookId", nullable = false, insertable = false, updatable = false)
     private Books book;
 
+    @ManyToOne
+    @JoinColumn(name = "UserId", nullable = false, insertable = false, updatable = false)
+    private Users users;
+
+
     @Column(name = "Quantity", nullable = false)
     private Integer quantity;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -55,6 +60,14 @@ public class LoansDetail {
 
     public Integer getQuantity() {
         return quantity;
+    }
+
+    public Users getUsers() {
+        return users;
+    }
+
+    public void setUsers(Users users) {
+        this.users = users;
     }
 
     public void setQuantity(Integer quantity) {
