@@ -1,5 +1,7 @@
 package com.example.biliosphere.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -18,19 +20,21 @@ Version 1.0
 public class Roles {
     @Id
     @Column(name = "Id")
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @Column(name = "RoleName", unique = true, nullable = false, length = 20)
     private String name;
 
+    @JsonBackReference
     @ManyToMany(mappedBy = "roles")
     private Set<Users> users;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

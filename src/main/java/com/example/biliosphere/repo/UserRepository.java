@@ -11,11 +11,12 @@ Version 1.0
 */
 
 import com.example.biliosphere.model.Users;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface UserRepository extends JpaRepository<Users,String> {
+    boolean existsByEmail(String email);
 
 //    public Page<Users> findByAlamatContainsIgnoreCase(org.springframework.data.domain.Pageable pageable, String nama);
 //    public Page<Users> findByUsernameContainsIgnoreCase(Pageable pageable, String nama);

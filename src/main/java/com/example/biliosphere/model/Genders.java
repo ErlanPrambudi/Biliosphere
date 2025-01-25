@@ -1,5 +1,6 @@
 package com.example.biliosphere.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -17,20 +18,23 @@ Version 1.0
 @Table(name = "MstGender")
 public class Genders {
     @Id
-    @Column(name = "GenderId")
-    private Long id;
+    @Column(name = "Id")
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @Column(name = "GenderName", unique = true, nullable = false, length = 20)
     private String gender;
 
-    @OneToMany(mappedBy = "gender")
+
+    @JsonBackReference
+    @OneToMany(mappedBy = "gender",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Users> users;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

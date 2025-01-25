@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 /*
 IntelliJ IDEA 2024.3 (Ultimate Edition)
@@ -19,7 +20,8 @@ Version 1.0
 @Table(name = "MstUsers")
 public class Users {
     @Id
-    @Column(name = "Id")
+    @Column(name = "BookId")
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @Column(name = "Name", nullable = false)
@@ -47,7 +49,7 @@ public class Users {
     }
 //    gender in here
     @ManyToOne
-    @JoinColumn(name = "GenderId", nullable = false)
+    @JoinColumn(name = "GenderId")
     private Genders gender;
 
     @OneToMany(mappedBy = "user")
@@ -61,10 +63,10 @@ public class Users {
     )
     private Set<Roles> roles;
 
-    @Column(name = "CreatedBy",updatable = false,nullable = false)
+    @Column(name = "CreatedBy",updatable = false)
     private String createdBy;
 
-    @Column(name = "CreatedDate",updatable = false,nullable = false)
+    @Column(name = "CreatedDate",updatable = false)
     private LocalDate createdDate =LocalDate.now();
 
     public String getCreatedBy() {
