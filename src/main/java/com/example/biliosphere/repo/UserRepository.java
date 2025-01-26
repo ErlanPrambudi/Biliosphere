@@ -14,8 +14,11 @@ import com.example.biliosphere.model.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface UserRepository extends JpaRepository<Users,String> {
+    Optional<Users> findByEmail(String email);
     boolean existsByEmail(String email);
 
 //    public Page<Users> findByAlamatContainsIgnoreCase(org.springframework.data.domain.Pageable pageable, String nama);

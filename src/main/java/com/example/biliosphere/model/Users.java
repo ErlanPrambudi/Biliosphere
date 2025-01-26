@@ -27,16 +27,16 @@ public class Users {
     @Column(name = "Name", nullable = false)
     private String nama;
 
-    @Column(name = "Address", nullable = false, length = 255)
+    @Column(name = "Address",  length = 255)
     private String alamat;
 
-    @Column(name = "PhoneNumber", nullable = false, length = 13)
+    @Column(name = "PhoneNumber",  length = 13)
     private String noTelpon;
 
     @Column(name = "Email", nullable = false, length = 50)
     private String email;
 
-    @Column(name = "Password", nullable = false, length = 50)
+    @Column(name = "Password", nullable = false, length = 255)
     private String password;
 
 
