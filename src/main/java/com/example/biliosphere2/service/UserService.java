@@ -79,6 +79,10 @@ public class UserService implements IService<User> {
             userDB.setUpdatedBy("-");
             userDB.setUpdatedDate(new Date());
             userDB.setNama(user.getNama());
+            userDB.setAlamat(user.getAlamat());
+            userDB.setTanggalLahir(user.getTanggalLahir());
+            userDB.setNoHp(user.getNoHp());
+            userDB.setPassword(BcryptImpl.hash(user.getUsername()+user.getPassword()));;
             userDB.setAkses(user.getAkses()); // ini relasi nya
         } catch (Exception e) {
             LoggingFile.logException("UserService", "update --> Line 75", e, OtherConfig.getEnableLogFile());
@@ -189,9 +193,10 @@ public class UserService implements IService<User> {
             tableUserDTO.setNoHp(user.getNoHp());
             tableUserDTO.setAlamat(user.getAlamat());
             tableUserDTO.setEmail(user.getEmail());
+            tableUserDTO.setTanggalLahir(user.getTanggalLahir());
+            tableUserDTO.setPassword(user.getPassword());
             tableUserDTO.setUsername(user.getUsername());
             tableUserDTO.setNama(user.getNama());
-            tableUserDTO.setTanggalLahir(user.getTanggalLahir());
             tableUserDTOList.add(tableUserDTO);
         }
         return tableUserDTOList;
