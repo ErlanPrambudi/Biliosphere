@@ -119,10 +119,8 @@ public class AppUserDetailService implements UserDetailsService {
                     userDB.setNoHp(user.getNoHp());
                     userDB.setEmail(user.getEmail());
                     userDB.setNama(user.getNama());
-                    userDB.setNoHp(user.getNoHp());
                     userDB.setPassword(BcryptImpl.hash(user.getUsername()+user.getPassword()));
                     userDB.setTanggalLahir(user.getTanggalLahir());
-                    userDB.setUpdatedBy(userDB.getNama());
                     userDB.setUpdatedDate(new Date());
                     otp = random.nextInt(111111,999999);
                     userDB.setOtp(BcryptImpl.hash(String.valueOf(otp)));

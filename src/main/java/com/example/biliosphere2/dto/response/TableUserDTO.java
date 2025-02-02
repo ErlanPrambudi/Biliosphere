@@ -1,6 +1,9 @@
 package com.example.biliosphere2.dto.response;
 
 
+import java.time.LocalDate;
+import java.util.Date;
+
 public class TableUserDTO {
 
     private Long id;
@@ -10,18 +13,22 @@ public class TableUserDTO {
     private String alamat;
     private String noHp;
     private String namaAkses;
-    private String tanggalLahir;
+    private LocalDate tanggalLahir;
     private String nama;
+
+
     public String getNama() {
         return nama;
     }
     public void setNama(String nama) {
         this.nama = nama;
     }
-    public String getTanggalLahir() {
+
+    public LocalDate getTanggalLahir() {
         return tanggalLahir;
     }
-    public void setTanggalLahir(String tanggalLahir) {
+
+    public void setTanggalLahir(LocalDate tanggalLahir) {
         this.tanggalLahir = tanggalLahir;
     }
 

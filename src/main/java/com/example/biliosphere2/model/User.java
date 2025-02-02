@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.*;
 
 /*
@@ -46,7 +47,7 @@ public class User implements UserDetails {
     private String alamat;
 
     @Column(name = "tanggalLahir")
-    private Date tanggalLahir;
+    private LocalDate tanggalLahir;
 
     @Column(name = "isRegistered", columnDefinition = "bit default 0")
     private Boolean isRegistered = false;
@@ -158,11 +159,11 @@ public class User implements UserDetails {
         this.alamat = alamat;
     }
 
-    public Date getTanggalLahir() {
+    public LocalDate getTanggalLahir() {
         return tanggalLahir;
     }
 
-    public void setTanggalLahir(Date tanggalLahir) {
+    public void setTanggalLahir(LocalDate tanggalLahir) {
         this.tanggalLahir = tanggalLahir;
     }
 

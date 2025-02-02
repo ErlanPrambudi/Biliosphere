@@ -50,6 +50,7 @@ public class ValRegisDTO {
     @JsonProperty("no-hp")
     private String noHp;
 
+    @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)

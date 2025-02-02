@@ -190,6 +190,8 @@ public class UserService implements IService<User> {
             tableUserDTO.setAlamat(user.getAlamat());
             tableUserDTO.setEmail(user.getEmail());
             tableUserDTO.setUsername(user.getUsername());
+            tableUserDTO.setNama(user.getNama());
+            tableUserDTO.setTanggalLahir(user.getTanggalLahir());
             tableUserDTOList.add(tableUserDTO);
         }
         return tableUserDTOList;
