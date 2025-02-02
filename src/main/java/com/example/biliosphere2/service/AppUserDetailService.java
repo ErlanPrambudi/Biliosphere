@@ -130,7 +130,7 @@ public class AppUserDetailService implements UserDetailsService {
                 }
             }
         }else {
-            user.setCreatedBy("Paul");
+            user.setCreatedBy("Erlan");
             user.setCreatedDate(new Date());
             user.setPassword(BcryptImpl.hash(user.getUsername()+user.getPassword()));
             otp = random.nextInt(111111,999999);

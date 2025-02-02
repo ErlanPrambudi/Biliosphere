@@ -3,6 +3,7 @@ package com.example.biliosphere2.service;
 import com.example.biliosphere2.config.OtherConfig;
 import com.example.biliosphere2.core.IService;
 import com.example.biliosphere2.dto.response.RespUserDTO;
+import com.example.biliosphere2.dto.response.TableUserDTO;
 import com.example.biliosphere2.dto.validasi.ValUserDTO;
 import com.example.biliosphere2.handler.ResponseHandler;
 import com.example.biliosphere2.model.User;
@@ -24,10 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserService implements IService<User> {
@@ -111,7 +109,8 @@ public class UserService implements IService<User> {
         List<User> list = null;
         page = userRepo.findAll(pageable);
         list = page.getContent();
-        List<RespUserDTO> listDTO = convertToListRespUserDTO(list);
+        //List<RespUserDTO> listDTO = convertToListRespUserDTO(list);
+        List<TableUserDTO> listDTO = convertToTableUserDTO(list);
 
         if (list.isEmpty()) {
             return GlobalResponse.dataTidakDitemukan(request);
@@ -165,7 +164,8 @@ public class UserService implements IService<User> {
         if (list.isEmpty()) {
             return GlobalResponse.dataTidakDitemukan(request);
         }
-        List<RespUserDTO> listDTO = convertToListRespUserDTO(list);
+        //List<RespUserDTO> listDTO = convertToListRespUserDTO(list);
+        List<TableUserDTO> listDTO = convertToTableUserDTO(list);
         Map<String, Object> mapList = transformPagination.transformPagination(listDTO, page, columnName, value);
         return GlobalResponse.dataResponseList(mapList, request);
     }
@@ -177,5 +177,21 @@ public class UserService implements IService<User> {
 
     public User convertToUser(ValUserDTO userDTO) {
         return modelMapper.map(userDTO, User.class);
+    }
+
+    public List<TableUserDTO> convertToTableUserDTO(List<User> userList){
+        List<TableUserDTO> tableUserDTOList = new ArrayList<>();
+        TableUserDTO tableUserDTO = null;
+        for(User user : userList){
+            tableUserDTO = new TableUserDTO();
+            tableUserDTO.setId(user.getId());
+            tableUserDTO.setNamaAkses(user.getAkses()==null?"":user.getAkses().getNamaAkses());
+            tableUserDTO.setNoHp(user.getNoHp());
+            tableUserDTO.setAlamat(user.getAlamat());
+            tableUserDTO.setEmail(user.getEmail());
+            tableUserDTO.setUsername(user.getUsername());
+            tableUserDTOList.add(tableUserDTO);
+        }
+        return tableUserDTOList;
     }
 }

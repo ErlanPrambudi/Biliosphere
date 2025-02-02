@@ -54,31 +54,5 @@ public class AuthController {
         return appUserDetailService.verifyRegis(appUserDetailService.convertToUser(valVerifyRegisDTO),request);
     }
 
-    /** ini buat coret-coretan aja */
-    @GetMapping("/coba")
-    public ResponseEntity<Object> responseDoank(){
-        ReportDTO reportDTO = new ReportDTO();
-        List<ValLoginDTO> lt = new ArrayList<>();
-
-        ValLoginDTO valLoginDTO = new ValLoginDTO();
-        valLoginDTO.setUsername("admin");
-        valLoginDTO.setPassword("Admin@123");
-        lt.add(valLoginDTO);
-
-        valLoginDTO = new ValLoginDTO();
-        valLoginDTO.setUsername("admin");
-        valLoginDTO.setPassword("Admin@1234");
-        lt.add(valLoginDTO);
-
-        valLoginDTO = new ValLoginDTO();
-        valLoginDTO.setUsername("admin");
-        valLoginDTO.setPassword("Admin@12345");
-        lt.add(valLoginDTO);
-        reportDTO.setList(lt);
-        reportDTO.setInfo("Informasi Tambahan!!");
-
-        return ResponseEntity.status(HttpStatus.OK).body(reportDTO);
-    }
-
 
 }

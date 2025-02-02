@@ -1,4 +1,5 @@
 package com.example.biliosphere2.model;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -20,6 +21,7 @@ public class Menu {
     private String path;
 
     @ManyToMany(mappedBy = "menuList")
+    @JsonBackReference
     private List<Akses> aksesList;
 
     @ManyToOne

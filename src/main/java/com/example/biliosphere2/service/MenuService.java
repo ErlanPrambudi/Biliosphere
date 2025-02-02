@@ -4,6 +4,7 @@ import com.example.biliosphere2.config.OtherConfig;
 import com.example.biliosphere2.core.IService;
 import com.example.biliosphere2.dto.response.RespGroupMenuDTO;
 import com.example.biliosphere2.dto.response.RespMenuDTO;
+import com.example.biliosphere2.dto.response.TableMenuDTO;
 import com.example.biliosphere2.dto.validasi.ValMenuDTO;
 import com.example.biliosphere2.handler.ResponseHandler;
 import com.example.biliosphere2.model.GroupMenu;
@@ -116,7 +117,8 @@ public class MenuService implements IService<Menu> {
         List<Menu> list = null;
         page = menuRepo.findAll(pageable);
         list = page.getContent();
-        List<RespMenuDTO> listDTO = convertToListRespMenuDTO(list);
+        //List<RespMenuDTO> listDTO = convertToListRespMenuDTO(list);
+        List<TableMenuDTO> listDTO = convertToTableMenuDTO(list);
 
         if(list.isEmpty()){
             return GlobalResponse.dataTidakDitemukan(request);
@@ -170,5 +172,18 @@ public class MenuService implements IService<Menu> {
 
     public Menu convertToMenu(ValMenuDTO menuDTO){
         return modelMapper.map(menuDTO,Menu.class);
+    }
+    public List<TableMenuDTO> convertToTableMenuDTO(List<Menu> menuList){
+        List<TableMenuDTO> list = new ArrayList<>();
+        TableMenuDTO tableMenuDTO ;
+        for(Menu menu : menuList){
+            tableMenuDTO = new TableMenuDTO();
+            tableMenuDTO.setId(menu.getId());
+            tableMenuDTO.setNama(menu.getNama());
+            tableMenuDTO.setPath(menu.getPath());
+            tableMenuDTO.setNamaGroupMenu(menu.getGroupMenu()==null?"":menu.getGroupMenu().getNamaGroupMenu());
+            list.add(tableMenuDTO);
+        }
+        return list;
     }
 }
