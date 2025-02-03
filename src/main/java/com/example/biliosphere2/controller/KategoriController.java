@@ -1,17 +1,7 @@
 package com.example.biliosphere2.controller;
 
-/*
-IntelliJ IDEA 2024.3 (Ultimate Edition)
-Build #IU-243.21565.193, built on November 13, 2024
-@Author Dell Erlan Prambudi
-Java Developer
-Created on 1/28/2025 8:19 PM
-@Last Modified 1/28/2025 8:19 PM
-Version 1.0
-*/
-
-import com.example.biliosphere2.dto.validasi.ValAksesDTO;
-import com.example.biliosphere2.service.AksesService;
+import com.example.biliosphere2.dto.validasi.ValKategoriDTO;
+import com.example.biliosphere2.service.KategoriService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,39 +16,36 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/akses")
-public class AksesController {
+@RequestMapping("/kategori")
+public class KategoriController {
 
     @Autowired
-    private AksesService aksesService;
+    private KategoriService kategoriService;
 
     Map<String,String> mapFilter = new HashMap<>();
 
-
-    public AksesController() {
+    public KategoriController() {
         filterColumnByMap();
     }
 
     @GetMapping("")
-    @PreAuthorize("hasAuthority('Akses')")
-    public ResponseEntity<Object> findAll(
-            HttpServletRequest request){
-        Pageable pageable = PageRequest.of(0,10, Sort.by("id"));//asc
-        return aksesService.findAll(pageable,request);
+    public ResponseEntity<Object> findAll(HttpServletRequest request){
+        Pageable pageable = PageRequest.of(0,10, Sort.by("id"));
+        return kategoriService.findAll(pageable,request);
     }
 
     @PostMapping("")
     @PreAuthorize("hasAuthority('Akses')")
-    public ResponseEntity<Object> save(@Valid @RequestBody ValAksesDTO aksesDTO, HttpServletRequest request){
-        return aksesService.save(aksesService.convertToAkses(aksesDTO),request);
+    public ResponseEntity<Object> save(@Valid @RequestBody ValKategoriDTO kategori, HttpServletRequest request){
+        return kategoriService.save(kategori,request);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('Akses')")
     public ResponseEntity<Object> update(
             @PathVariable(value = "id") Long id,
-            @Valid @RequestBody ValAksesDTO aksesDTO, HttpServletRequest request){
-        return aksesService.update(id, aksesService.convertToAkses(aksesDTO),request);
+            @Valid @RequestBody ValKategoriDTO kategori, HttpServletRequest request){
+        return kategoriService.update(id,kategori,request);
     }
 
     @DeleteMapping("/{id}")
@@ -66,21 +53,19 @@ public class AksesController {
     public ResponseEntity<Object> delete(
             @PathVariable(value = "id") Long id,
             HttpServletRequest request){
-        return aksesService.delete(id,request);
+        return kategoriService.delete(id,request);
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('Akses')")
     public ResponseEntity<Object> findById(@PathVariable(value = "id") Long id,
                                            HttpServletRequest request){
-        return aksesService.findById(id,request);
+        return kategoriService.findById(id,request);
     }
 
     @GetMapping("/{sort}/{sortBy}/{page}")
-    @PreAuthorize("hasAuthority('Akses')")
     public ResponseEntity<Object> findByParam(
             @PathVariable(value = "sort") String sort,
-            @PathVariable(value = "sortBy") String sortBy,//name
+            @PathVariable(value = "sortBy") String sortBy,
             @PathVariable(value = "page") Integer page,
             @RequestParam(value = "size") Integer size,
             @RequestParam(value = "column") String column,
@@ -89,16 +74,14 @@ public class AksesController {
         Pageable pageable = null;
         sortBy = mapFilter.get(sortBy)==null?"id":sortBy;
         if(sort.equals("asc")){
-            pageable = PageRequest.of(page,size, Sort.by(sortBy));//asc
+            pageable = PageRequest.of(page,size, Sort.by(sortBy));
         }else {
-            pageable = PageRequest.of(page,size, Sort.by(sortBy).descending());//asc
+            pageable = PageRequest.of(page,size, Sort.by(sortBy).descending());
         }
-        return aksesService.findByParam(pageable,column,value,request);
+        return kategoriService.findByParam(pageable,column,value,request);
     }
-
 
     public void filterColumnByMap(){
-        mapFilter.put("nama","nama");
+        mapFilter.put("nama","namaKategori");
     }
 }
-

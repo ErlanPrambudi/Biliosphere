@@ -59,7 +59,7 @@ public class MenuService implements IService<Menu> {
             if(menu==null){
                 return GlobalResponse.dataTidakValid("FVAUT02001",request);
             }
-            menu.setCreatedBy("Paul");
+            menu.setCreatedBy("erlan");
             menu.setCreatedDate(new Date());
             menuRepo.save(menu);
         }catch (Exception e){
@@ -82,7 +82,7 @@ public class MenuService implements IService<Menu> {
                 return GlobalResponse.dataTidakDitemukan(request);
             }
             Menu menuDB = menuOptional.get();
-            menuDB.setUpdatedBy("Reksa");
+            menuDB.setUpdatedBy("Erlan");
             menuDB.setUpdatedDate(new Date());
             menuDB.setNama(menu.getNama());
             menuDB.setPath(menu.getPath());
