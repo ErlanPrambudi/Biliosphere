@@ -76,7 +76,7 @@ public class UserService implements IService<User> {
                 return GlobalResponse.dataTidakDitemukan(request);
             }
             User userDB = userOptional.get();
-            userDB.setUpdatedBy("-");
+            userDB.setUpdatedBy("erlan");
             userDB.setUpdatedDate(new Date());
             userDB.setNama(user.getNama());
             userDB.setAlamat(user.getAlamat());

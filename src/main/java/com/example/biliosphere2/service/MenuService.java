@@ -82,7 +82,7 @@ public class MenuService implements IService<Menu> {
                 return GlobalResponse.dataTidakDitemukan(request);
             }
             Menu menuDB = menuOptional.get();
-            menuDB.setUpdatedBy("Erlan");
+            menuDB.setUpdatedBy("erlan");
             menuDB.setUpdatedDate(new Date());
             menuDB.setNama(menu.getNama());
             menuDB.setPath(menu.getPath());

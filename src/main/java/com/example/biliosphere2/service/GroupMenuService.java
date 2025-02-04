@@ -101,7 +101,7 @@ public class GroupMenuService implements IService<GroupMenu> {
                 return GlobalResponse.dataTidakDitemukan(request);
             }
             GroupMenu groupMenuDB = groupMenuOptional.get();
-            groupMenuDB.setUpdatedBy("Reksa");
+            groupMenuDB.setUpdatedBy("erlan");
             groupMenuDB.setUpdatedDate(new Date());
             groupMenuDB.setNamaGroupMenu(groupMenu.getNamaGroupMenu());
 

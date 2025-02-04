@@ -14,13 +14,9 @@ Version 1.0
 import com.example.biliosphere2.config.OtherConfig;
 import com.example.biliosphere2.core.IService;
 import com.example.biliosphere2.dto.response.RespKategoriDTO;
-import com.example.biliosphere2.dto.response.TableKategoriDTO;
-import com.example.biliosphere2.dto.response.TableMenuDTO;
 import com.example.biliosphere2.dto.validasi.ValKategoriDTO;
-import com.example.biliosphere2.dto.validasi.ValMenuDTO;
 import com.example.biliosphere2.handler.ResponseHandler;
 import com.example.biliosphere2.model.Kategori;
-import com.example.biliosphere2.model.Menu;
 import com.example.biliosphere2.repository.KategoriRepo;
 import com.example.biliosphere2.util.GlobalResponse;
 import com.example.biliosphere2.util.LoggingFile;
@@ -88,7 +84,7 @@ public class KategoriService implements IService<ValKategoriDTO> {
                 return GlobalResponse.dataTidakDitemukan(request);
             }
             Kategori kategoriDB = kategoriOptional.get();
-            kategoriDB.setUpdatedBy("Erlan");
+            kategoriDB.setUpdatedBy("erlan");
             kategoriDB.setUpdatedDate(new Date());
             kategoriDB.setNamaKategori(kategoriDTO.getNamaKategori());
             kategoriRepo.save(kategoriDB);
@@ -177,18 +173,5 @@ public class KategoriService implements IService<ValKategoriDTO> {
 
     public Kategori convertToKategori(ValKategoriDTO kategoriDTO){
         return modelMapper.map(kategoriDTO,Kategori.class);
-    }
-
-
-    public List<TableKategoriDTO> convertToTableKategoriDTO(List<Kategori> kategoriList) {
-        List<TableKategoriDTO> list = new ArrayList<>();
-        TableKategoriDTO tableKategoriDTO;
-        for (Kategori kategori : kategoriList) {
-            tableKategoriDTO = new TableKategoriDTO();
-            tableKategoriDTO.setId(kategori.getId());
-            tableKategoriDTO.setNamaKategori(kategori.getNamaKategori());
-            list.add(tableKategoriDTO);
-        }
-        return list;
     }
 }

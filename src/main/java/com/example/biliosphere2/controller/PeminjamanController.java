@@ -1,18 +1,7 @@
 package com.example.biliosphere2.controller;
 
-/*
-IntelliJ IDEA 2024.3 (Ultimate Edition)
-Build #IU-243.21565.193, built on November 13, 2024
-@Author Dell Erlan Prambudi
-Java Developer
-Created on 2/4/2025 5:20 AM
-@Last Modified 2/4/2025 5:20 AM
-Version 1.0
-*/
-
-
-import com.example.biliosphere2.dto.validasi.ValBukuDTO;
-import com.example.biliosphere2.service.BukuService;
+import com.example.biliosphere2.dto.validasi.ValPeminjamanDTO;
+import com.example.biliosphere2.service.PeminjamanService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,59 +14,67 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+/*
+IntelliJ IDEA 2024.3 (Ultimate Edition)
+Build #IU-243.21565.193, built on November 13, 2024
+@Author Dell Erlan Prambudi
+Java Developer
+Created on 2/4/2025 6:56 PM
+@Last Modified 2/4/2025 6:56 PM
+Version 1.0
+*/
+
 
 @RestController
-@RequestMapping("/buku")
-public class BukuController {
+@RequestMapping("/peminjaman")
+public class PeminjamanController {
 
     @Autowired
-    private BukuService bukuService;
+    private PeminjamanService peminjamanService;
 
     Map<String, String> mapFilter = new HashMap<>();
 
-    public BukuController() {
+    public PeminjamanController() {
         filterColumnByMap();
     }
 
     @GetMapping("")
+    @PreAuthorize("hasAuthority('Peminjaman')")
     public ResponseEntity<Object> findAll(HttpServletRequest request) {
         Pageable pageable = PageRequest.of(0, 10, Sort.by("id"));
-        return bukuService.findAll(pageable, request);
+        return peminjamanService.findAll(pageable, request);
     }
 
     @PostMapping("")
-    @PreAuthorize("hasAuthority('Buku')")
-    public ResponseEntity<Object> save(@Valid @RequestBody ValBukuDTO buku, HttpServletRequest request) {
-        return bukuService.save(buku, request);
+    @PreAuthorize("hasAuthority('Peminjaman')")
+    public ResponseEntity<Object> save(@Valid @RequestBody ValPeminjamanDTO peminjamanDTO, HttpServletRequest request) {
+        return peminjamanService.save(peminjamanDTO, request);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('Buku')")
+    @PreAuthorize("hasAuthority('Peminjaman')")
     public ResponseEntity<Object> update(
             @PathVariable(value = "id") Long id,
-            @Valid @RequestBody ValBukuDTO buku,
-            HttpServletRequest request) {
-        return bukuService.update(id, buku, request);
+            @Valid @RequestBody ValPeminjamanDTO peminjamanDTO, HttpServletRequest request) {
+        return peminjamanService.update(id, peminjamanDTO, request);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('Buku')")
+    @PreAuthorize("hasAuthority('Peminjaman')")
     public ResponseEntity<Object> delete(
             @PathVariable(value = "id") Long id,
             HttpServletRequest request) {
-        return bukuService.delete(id, request);
+        return peminjamanService.delete(id, request);
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('Buku')")
-    public ResponseEntity<Object> findById(
-            @PathVariable(value = "id") Long id,
-            HttpServletRequest request) {
-        return bukuService.findById(id, request);
+    @PreAuthorize("hasAuthority('Peminjaman')")
+    public ResponseEntity<Object> findById(@PathVariable(value = "id") Long id, HttpServletRequest request) {
+        return peminjamanService.findById(id, request);
     }
 
     @GetMapping("/{sort}/{sortBy}/{page}")
-    @PreAuthorize("hasAuthority('Buku')")
+    @PreAuthorize("hasAuthority('Peminjaman')")
     public ResponseEntity<Object> findByParam(
             @PathVariable(value = "sort") String sort,
             @PathVariable(value = "sortBy") String sortBy,
@@ -86,24 +83,20 @@ public class BukuController {
             @RequestParam(value = "column") String column,
             @RequestParam(value = "value") String value,
             HttpServletRequest request) {
-
-        Pageable pageable;
+        Pageable pageable = null;
         sortBy = mapFilter.get(sortBy) == null ? "id" : sortBy;
-
         if (sort.equals("asc")) {
             pageable = PageRequest.of(page, size, Sort.by(sortBy));
         } else {
             pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
         }
-
-        return bukuService.findByParam(pageable, column, value, request);
+        return peminjamanService.findByParam(pageable, column, value, request);
     }
 
     public void filterColumnByMap() {
-        mapFilter.put("judul", "judul");
-        mapFilter.put("penulis", "penulis");
-        mapFilter.put("penerbit", "penerbit");
-        mapFilter.put("tahunTerbit", "tahunTerbit");
-        mapFilter.put("kategori", "namaKategori");
+        mapFilter.put("userNama", "userNama");
+        mapFilter.put("bukuJudul", "bukuJudul");
+        mapFilter.put("statusPengembalian", "statusPengembalian");
     }
 }
+

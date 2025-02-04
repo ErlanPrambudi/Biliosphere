@@ -32,7 +32,7 @@ public class GroupMenuController {
     }
 
     @GetMapping("")
-    @PreAuthorize("hasAuthority('Group-Menu')")
+    @PreAuthorize("hasAuthority('Menu')")
     public ResponseEntity<Object> findAll(
             HttpServletRequest request){
         Pageable pageable = PageRequest.of(0,10, Sort.by("id"));//asc
@@ -40,13 +40,13 @@ public class GroupMenuController {
     }
 
     @PostMapping("")
-    @PreAuthorize("hasAuthority('Group-Menu')")
+    @PreAuthorize("hasAuthority('Menu')")
     public ResponseEntity<Object> save(@Valid @RequestBody ValGroupMenuDTO groupMenu, HttpServletRequest request){
         return groupMenuService.save(groupMenuService.convertToListRespGroupMenuDTO(groupMenu), request);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('Group-Menu')")
+    @PreAuthorize("hasAuthority('Menu')")
     public ResponseEntity<Object> update(
             @PathVariable(value = "id") Long id,
             @Valid @RequestBody ValGroupMenuDTO groupMenu, HttpServletRequest request){
@@ -54,7 +54,7 @@ public class GroupMenuController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('Group-Menu')")
+    @PreAuthorize("hasAuthority('Menu')")
     public ResponseEntity<Object> delete(
             @PathVariable(value = "id") Long id,
             HttpServletRequest request){
@@ -62,14 +62,14 @@ public class GroupMenuController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('Group-Menu')")
+    @PreAuthorize("hasAuthority('Menu')")
     public ResponseEntity<Object> findById(@PathVariable(value = "id") Long id,
                                            HttpServletRequest request){
         return groupMenuService.findById(id,request);
     }
 
     @GetMapping("/{sort}/{sortBy}/{page}")
-    @PreAuthorize("hasAuthority('Group-Menu')")
+    @PreAuthorize("hasAuthority('Menu')")
     public ResponseEntity<Object> findByParam(
             @PathVariable(value = "sort") String sort,
             @PathVariable(value = "sortBy") String sortBy,//name
@@ -90,7 +90,8 @@ public class GroupMenuController {
 
     public void filterColumnByMap(){
         mapFilter.put("nama","nama");
-        mapFilter.put("group","group");
+        mapFilter.put("path","/path");
+        mapFilter.put("group-menu","group-menu");
     }
 }
 

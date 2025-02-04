@@ -13,7 +13,6 @@ Version 1.0
 import com.example.biliosphere2.config.OtherConfig;
 import com.example.biliosphere2.core.IService;
 import com.example.biliosphere2.dto.response.RespBukuDTO;
-import com.example.biliosphere2.dto.response.TableBukuDTO;
 import com.example.biliosphere2.dto.validasi.ValBukuDTO;
 import com.example.biliosphere2.handler.ResponseHandler;
 import com.example.biliosphere2.model.Buku;
@@ -25,7 +24,6 @@ import com.example.biliosphere2.util.LoggingFile;
 import com.example.biliosphere2.util.TransformPagination;
 import jakarta.servlet.http.HttpServletRequest;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -218,24 +216,7 @@ public class BukuService implements IService<ValBukuDTO> {
 
     public Buku convertToBuku(ValBukuDTO bukuDTO){
         Buku buku = modelMapper.map(bukuDTO, Buku.class);
-        // Note: Kategori will be set separately in save/update methods
         return buku;
     }
 
-    public List<TableBukuDTO> convertToTableBukuDTO(List<Buku> bukuList) {
-        List<TableBukuDTO> list = new ArrayList<>();
-        TableBukuDTO tableBukuDTO;
-        for (Buku buku : bukuList) {
-            tableBukuDTO = new TableBukuDTO();
-            tableBukuDTO.setId(buku.getId());
-            tableBukuDTO.setJudul(buku.getJudul());
-            tableBukuDTO.setPenulis(buku.getPenulis());
-            tableBukuDTO.setPenerbit(buku.getPenerbit());
-            tableBukuDTO.setTahunTerbit(buku.getTahunTerbit());
-            tableBukuDTO.setNamaKategori(buku.getKategori() != null ? buku.getKategori().getNamaKategori() : null);
-            tableBukuDTO.setStok(buku.getStok());
-            list.add(tableBukuDTO);
-        }
-        return list;
-    }
 }

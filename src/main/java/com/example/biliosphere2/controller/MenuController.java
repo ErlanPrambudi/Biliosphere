@@ -22,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -42,6 +43,7 @@ public class MenuController {
     }
 
     @GetMapping("")
+    @PreAuthorize("hasAuthority('Menu')")
     public ResponseEntity<Object> findAll(
             HttpServletRequest request){
         Pageable pageable = PageRequest.of(0,10, Sort.by("id"));//asc
@@ -49,11 +51,13 @@ public class MenuController {
     }
 
     @PostMapping("")
+    @PreAuthorize("hasAuthority('Menu')")
     public ResponseEntity<Object> save(@Valid @RequestBody ValMenuDTO menu, HttpServletRequest request){
         return menuService.save(menuService.convertToMenu(menu),request);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('Menu')")
     public ResponseEntity<Object> update(
             @PathVariable(value = "id") Long id,
             @Valid @RequestBody ValMenuDTO menu, HttpServletRequest request){
@@ -61,6 +65,7 @@ public class MenuController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('Menu')")
     public ResponseEntity<Object> delete(
             @PathVariable(value = "id") Long id,
             HttpServletRequest request){
@@ -74,6 +79,7 @@ public class MenuController {
     }
 
     @GetMapping("/{sort}/{sortBy}/{page}")
+    @PreAuthorize("hasAuthority('Menu')")
     public ResponseEntity<Object> findByParam(
             @PathVariable(value = "sort") String sort,
             @PathVariable(value = "sortBy") String sortBy,//name

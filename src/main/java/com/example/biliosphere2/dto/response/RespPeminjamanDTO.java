@@ -1,58 +1,37 @@
-package com.example.biliosphere2.model;
+package com.example.biliosphere2.dto.response;
 
 /*
 IntelliJ IDEA 2024.3 (Ultimate Edition)
 Build #IU-243.21565.193, built on November 13, 2024
 @Author Dell Erlan Prambudi
 Java Developer
-Created on 1/28/2025 10:27 PM
-@Last Modified 1/28/2025 10:27 PM
+Created on 2/4/2025 4:30 PM
+@Last Modified 2/4/2025 4:30 PM
 Version 1.0
 */
 
-import jakarta.persistence.*;
 import java.util.Date;
 
-@Entity
-@Table(name = "MstPeminjaman")
-public class Peminjaman {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class RespPeminjamanDTO {
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "IDUser", foreignKey = @ForeignKey(name = "fk-peminjaman-to-user"))
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "IDBuku", foreignKey = @ForeignKey(name = "fk-peminjaman-to-buku"))
-    private Buku buku;
-
-    @Column(name = "tanggalPinjam", nullable = false)
+    private Long userId;
+    private String userName;  // tambahan untuk menampilkan nama user
+    private Long bukuId;
+    private String judulBuku; // tambahan untuk menampilkan judul buku
     private Date tanggalPinjam;
-
-    @Column(name = "tanggalKembali", nullable = false)
     private Date tanggalKembali;
-
-    @Column(name = "statusPengembalian", nullable = false)
-    private Boolean statusPengembalian = false;
-
-    @OneToOne(mappedBy = "peminjaman", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Denda denda;  // OneToOne relationship with Denda
-
-    @Column(name = "createdBy", updatable = false, nullable = false)
+    private Boolean statusPengembalian;
+    private RespDendaDTO denda;  // nested DTO untuk informasi denda
     private String createdBy;
-
-    @Column(name = "createdDate", updatable = false, nullable = false)
-    private Date createdDate = new Date();
-
-    @Column(name = "updatedBy", insertable = false)
+    private Date createdDate;
     private String updatedBy;
-
-    @Column(name = "updatedDate", insertable = false)
     private Date updatedDate;
 
+    // constructor
+    public RespPeminjamanDTO() {
+    }
+
+    // getters and setters
     public Long getId() {
         return id;
     }
@@ -61,20 +40,36 @@ public class Peminjaman {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
-    public Buku getBuku() {
-        return buku;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setBuku(Buku buku) {
-        this.buku = buku;
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public Long getBukuId() {
+        return bukuId;
+    }
+
+    public void setBukuId(Long bukuId) {
+        this.bukuId = bukuId;
+    }
+
+    public String getJudulBuku() {
+        return judulBuku;
+    }
+
+    public void setJudulBuku(String judulBuku) {
+        this.judulBuku = judulBuku;
     }
 
     public Date getTanggalPinjam() {
@@ -93,19 +88,19 @@ public class Peminjaman {
         this.tanggalKembali = tanggalKembali;
     }
 
-    public Boolean getStatusPeengembalian() {
+    public Boolean statusPengembalian() {
         return statusPengembalian;
     }
 
-    public void setStatusPengembalian(Boolean statusPengembalian) {
+    public void statusPengembalian(Boolean statusPengembalian) {
         this.statusPengembalian = statusPengembalian;
     }
 
-    public Denda getDenda() {
+    public RespDendaDTO getDenda() {
         return denda;
     }
 
-    public void setDenda(Denda denda) {
+    public void setDenda(RespDendaDTO denda) {
         this.denda = denda;
     }
 
@@ -140,5 +135,4 @@ public class Peminjaman {
     public void setUpdatedDate(Date updatedDate) {
         this.updatedDate = updatedDate;
     }
-
 }
