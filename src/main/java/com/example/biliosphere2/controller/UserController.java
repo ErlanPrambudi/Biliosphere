@@ -12,7 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 public class UserController {
 
     @Autowired
@@ -20,7 +20,7 @@ public class UserController {
 
     @Transactional
     @PostMapping("")
-    @PreAuthorize("hasAuthority('User')")
+    //@PreAuthorize("hasAuthority('User')")
     public ResponseEntity<Object> save(@RequestBody ValUserDTO userDTO,
                                        HttpServletRequest request) {
         User user = userService.convertToUser(userDTO);
@@ -28,7 +28,7 @@ public class UserController {
     }
     @Transactional
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('User')")
+    //@PreAuthorize("hasAuthority('User')")
     public ResponseEntity<Object> update(@PathVariable("id") Long id,
                                          @RequestBody ValUserDTO userDTO,
                                          HttpServletRequest request) {
@@ -37,28 +37,28 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('User')")
+    //@PreAuthorize("hasAuthority('User')")
     public ResponseEntity<Object> delete(@PathVariable("id") Long id,
                                          HttpServletRequest request) {
         return userService.delete(id, request);
     }
 
     @GetMapping("")
-    @PreAuthorize("hasAuthority('User')")
+    //@PreAuthorize("hasAuthority('User')")
     public ResponseEntity<Object> findAll(Pageable pageable,
                                           HttpServletRequest request) {
         return userService.findAll(pageable, request);
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('User')")
+    //@PreAuthorize("hasAuthority('User')")
     public ResponseEntity<Object> findById(@PathVariable("id") Long id,
                                            HttpServletRequest request) {
         return userService.findById(id, request);
     }
 
     @GetMapping("/search/{columnName}/{value}")
-    @PreAuthorize("hasAuthority('User')")
+    //@PreAuthorize("hasAuthority('User')")
     public ResponseEntity<Object> findByParam(Pageable pageable,
                                               @PathVariable("columnName") String columnName,
                                               @PathVariable("value") String value,

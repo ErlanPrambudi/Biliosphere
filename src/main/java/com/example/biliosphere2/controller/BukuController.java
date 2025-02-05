@@ -69,7 +69,7 @@ public class BukuController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('Buku')")
+    //@PreAuthorize("hasAuthority('Buku')")
     public ResponseEntity<Object> findById(
             @PathVariable(value = "id") Long id,
             HttpServletRequest request) {
@@ -77,7 +77,7 @@ public class BukuController {
     }
 
     @GetMapping("/{sort}/{sortBy}/{page}")
-    @PreAuthorize("hasAuthority('Buku')")
+    //@PreAuthorize("hasAuthority('Buku')")
     public ResponseEntity<Object> findByParam(
             @PathVariable(value = "sort") String sort,
             @PathVariable(value = "sortBy") String sortBy,

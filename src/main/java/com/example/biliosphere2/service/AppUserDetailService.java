@@ -95,7 +95,7 @@ public class AppUserDetailService implements UserDetailsService {
 
         /** default untuk proses registrasi, user akan mendapatkan akses dengan ID 2 */
         Akses akses = new Akses();
-        akses.setId(2L);
+        akses.setId(3L);
 
         Optional<User> optUser = userRepo.findByUsername(user.getUsername());
         User userDB = null;

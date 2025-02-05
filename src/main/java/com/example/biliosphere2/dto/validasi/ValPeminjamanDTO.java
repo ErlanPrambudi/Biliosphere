@@ -1,79 +1,43 @@
 package com.example.biliosphere2.dto.validasi;
 
-/*
-IntelliJ IDEA 2024.3 (Ultimate Edition)
-Build #IU-243.21565.193, built on November 13, 2024
-@Author Dell Erlan Prambudi
-Java Developer
-Created on 2/4/2025 4:29 PM
-@Last Modified 2/4/2025 4:29 PM
-Version 1.0
-*/
-
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.FutureOrPresent;
-import java.util.Date;
+import java.time.LocalDate;
 
 public class ValPeminjamanDTO {
-    @NotNull(message = "ID User tidak boleh kosong")
+
+    @NotNull(message = "User tidak boleh kosong")
     private Long userId;
 
-    @NotNull(message = "ID Buku tidak boleh kosong")
+    @NotNull(message = "Buku tidak boleh kosong")
     private Long bukuId;
 
     @NotNull(message = "Tanggal pinjam tidak boleh kosong")
-    @FutureOrPresent(message = "Tanggal pinjam tidak boleh di masa lalu")
-    private Date tanggalPinjam;
+    private LocalDate tanggalPinjam;
 
     @NotNull(message = "Tanggal kembali tidak boleh kosong")
-    @FutureOrPresent(message = "Tanggal kembali tidak boleh di masa lalu")
-    private Date tanggalKembali;
+    @Future(message = "Tanggal kembali harus di masa depan")
+    private LocalDate tanggalKembali;
 
-    @NotNull(message = "Status peminjaman tidak boleh kosong")
-    private Boolean statusPengembalian;
+    @NotNull(message = "status pengembalian tidak boleh kosong")
+    private Long statusPengembalianId;
+    // Constructors
+    public ValPeminjamanDTO() {}
 
-    public Boolean getStatusPengembalian() {
-        return statusPengembalian;
-    }
+    // Getters and Setters
+    public Long getUserId() { return userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
 
-    public void setStatusPengembalian(Boolean statusPengembalian) {
-        this.statusPengembalian = statusPengembalian;
-    }
+    public Long getBukuId() { return bukuId; }
+    public void setBukuId(Long bukuId) { this.bukuId = bukuId; }
 
-    // constructor
-    public ValPeminjamanDTO() {
-    }
+    public LocalDate getTanggalPinjam() { return tanggalPinjam; }
+    public void setTanggalPinjam(LocalDate tanggalPinjam) { this.tanggalPinjam = tanggalPinjam; }
 
-    // getters and setters
-    public Long getUserId() {
-        return userId;
-    }
+    public LocalDate getTanggalKembali() { return tanggalKembali; }
+    public void setTanggalKembali(LocalDate tanggalKembali) { this.tanggalKembali = tanggalKembali; }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
+    public Long getStatusPengembalianId() { return statusPengembalianId; }
+    public void setStatusPengembalianId(Long statusPengembalianId) { this.statusPengembalianId = statusPengembalianId; }
 
-    public Long getBukuId() {
-        return bukuId;
-    }
-
-    public void setBukuId(Long bukuId) {
-        this.bukuId = bukuId;
-    }
-
-    public Date getTanggalPinjam() {
-        return tanggalPinjam;
-    }
-
-    public void setTanggalPinjam(Date tanggalPinjam) {
-        this.tanggalPinjam = tanggalPinjam;
-    }
-
-    public Date getTanggalKembali() {
-        return tanggalKembali;
-    }
-
-    public void setTanggalKembali(Date tanggalKembali) {
-        this.tanggalKembali = tanggalKembali;
-    }
 }

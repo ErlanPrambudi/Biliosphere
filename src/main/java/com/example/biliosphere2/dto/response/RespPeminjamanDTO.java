@@ -1,37 +1,32 @@
 package com.example.biliosphere2.dto.response;
 
 /*
-IntelliJ IDEA 2024.3 (Ultimate Edition)
-Build #IU-243.21565.193, built on November 13, 2024
-@Author Dell Erlan Prambudi
-Java Developer
-Created on 2/4/2025 4:30 PM
-@Last Modified 2/4/2025 4:30 PM
-Version 1.0
+ IntelliJ IDEA 2024.3 (Ultimate Edition)
+ Build #IU-243.21565.193, built on November 13, 2024
+ @Author Dell Erlan Prambudi
+ Java Developer
+ Created on 2/4/2025 4:30 PM
+ @Last Modified 2/4/2025 4:30 PM
+ Version 1.0
 */
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class RespPeminjamanDTO {
     private Long id;
     private Long userId;
-    private String userName;  // tambahan untuk menampilkan nama user
     private Long bukuId;
     private String judulBuku; // tambahan untuk menampilkan judul buku
-    private Date tanggalPinjam;
-    private Date tanggalKembali;
-    private Boolean statusPengembalian;
-    private RespDendaDTO denda;  // nested DTO untuk informasi denda
+    private LocalDate tanggalPinjam;
+    private LocalDate tanggalKembali;
+    private String statusPengembalianNama;
+    private Long dendaId;  // nested DTO untuk informasi denda
     private String createdBy;
-    private Date createdDate;
+    private LocalDateTime createdDate;
     private String updatedBy;
-    private Date updatedDate;
+    private LocalDateTime updatedDate;
 
-    // constructor
-    public RespPeminjamanDTO() {
-    }
-
-    // getters and setters
     public Long getId() {
         return id;
     }
@@ -46,14 +41,6 @@ public class RespPeminjamanDTO {
 
     public void setUserId(Long userId) {
         this.userId = userId;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
     public Long getBukuId() {
@@ -72,36 +59,36 @@ public class RespPeminjamanDTO {
         this.judulBuku = judulBuku;
     }
 
-    public Date getTanggalPinjam() {
+    public LocalDate getTanggalPinjam() {
         return tanggalPinjam;
     }
 
-    public void setTanggalPinjam(Date tanggalPinjam) {
+    public void setTanggalPinjam(LocalDate tanggalPinjam) {
         this.tanggalPinjam = tanggalPinjam;
     }
 
-    public Date getTanggalKembali() {
+    public LocalDate getTanggalKembali() {
         return tanggalKembali;
     }
 
-    public void setTanggalKembali(Date tanggalKembali) {
+    public void setTanggalKembali(LocalDate tanggalKembali) {
         this.tanggalKembali = tanggalKembali;
     }
 
-    public Boolean statusPengembalian() {
-        return statusPengembalian;
+    public String getStatusPengembalianNama() {
+        return statusPengembalianNama;
     }
 
-    public void statusPengembalian(Boolean statusPengembalian) {
-        this.statusPengembalian = statusPengembalian;
+    public void setStatusPengembalianNama(String statusPengembalianNama) {
+        this.statusPengembalianNama = statusPengembalianNama;
     }
 
-    public RespDendaDTO getDenda() {
-        return denda;
+    public Long getDendaId() {
+        return dendaId;
     }
 
-    public void setDenda(RespDendaDTO denda) {
-        this.denda = denda;
+    public void setDendaId(Long dendaId) {
+        this.dendaId = dendaId;
     }
 
     public String getCreatedBy() {
@@ -112,11 +99,11 @@ public class RespPeminjamanDTO {
         this.createdBy = createdBy;
     }
 
-    public Date getCreatedDate() {
+    public LocalDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -128,11 +115,11 @@ public class RespPeminjamanDTO {
         this.updatedBy = updatedBy;
     }
 
-    public Date getUpdatedDate() {
+    public LocalDateTime getUpdatedDate() {
         return updatedDate;
     }
 
-    public void setUpdatedDate(Date updatedDate) {
+    public void setUpdatedDate(LocalDateTime updatedDate) {
         this.updatedDate = updatedDate;
     }
 }
