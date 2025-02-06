@@ -83,9 +83,9 @@ public class RespPeminjamanDTO {
         this.statusPengembalianNama = statusPengembalianNama;
     }
 
-    public Long getDendaId() {
-        return dendaId;
-    }
+//    public Long getDendaId() {
+//        return dendaId;
+//    }
 
     public void setDendaId(Long dendaId) {
         this.dendaId = dendaId;

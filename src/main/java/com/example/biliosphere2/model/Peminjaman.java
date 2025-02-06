@@ -32,8 +32,8 @@ public class Peminjaman {
     @JoinColumn(name = "IDStatusPengembalian", foreignKey = @ForeignKey(name = "fk_peminjaman_statuspengembalian"))
     private StatusPengembalian statusPengembalian;
 
-    @OneToOne(mappedBy = "peminjaman", cascade = CascadeType.ALL, orphanRemoval = true, optional = true)
-    private Denda denda;
+//    @OneToOne(mappedBy = "peminjaman", cascade = CascadeType.ALL, orphanRemoval = true, optional = true)
+//    private Denda denda;
 
     @Column(name = "createdBy", updatable = false, nullable = false)
     private String createdBy;
@@ -76,8 +76,8 @@ public class Peminjaman {
     public StatusPengembalian getStatusPengembalian() { return statusPengembalian; }
     public void setStatusPengembalian(StatusPengembalian statusPengembalian) { this.statusPengembalian = statusPengembalian; }
 
-    public Denda getDenda() { return denda; }
-    public void setDenda(Denda denda) { this.denda = denda; }
+//    public Denda getDenda() { return denda; }
+//    public void setDenda(Denda denda) { this.denda = denda; }
 
     public String getCreatedBy() { return createdBy; }
     public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }

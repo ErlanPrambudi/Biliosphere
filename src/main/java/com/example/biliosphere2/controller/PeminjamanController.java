@@ -28,7 +28,7 @@ public class PeminjamanController {
     }
 
     @GetMapping("")
-    //@PreAuthorize("hasAuthority('Peminjaman')")
+    @PreAuthorize("hasAuthority('Peminjaman')")
     public ResponseEntity<Object> findAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -44,13 +44,13 @@ public class PeminjamanController {
     }
 
     @PostMapping("")
-    //@PreAuthorize("hasAuthority('Peminjaman')")
+    @PreAuthorize("hasAuthority('Peminjaman')")
     public ResponseEntity<Object> save(@Valid @RequestBody ValPeminjamanDTO peminjamanDTO, HttpServletRequest request) {
         return peminjamanService.save(peminjamanDTO, request);
     }
 
     @PutMapping("/{id}")
-    //@PreAuthorize("hasAuthority('Peminjaman')")
+    @PreAuthorize("hasAuthority('Peminjaman')")
     public ResponseEntity<Object> update(
             @PathVariable(value = "id") Long id,
             @Valid @RequestBody ValPeminjamanDTO peminjamanDTO,
@@ -59,7 +59,7 @@ public class PeminjamanController {
     }
 
     @DeleteMapping("/{id}")
-    //@PreAuthorize("hasAuthority('Peminjaman')")
+    @PreAuthorize("hasAuthority('Peminjaman')")
     public ResponseEntity<Object> delete(
             @PathVariable(value = "id") Long id,
             HttpServletRequest request) {
@@ -73,7 +73,7 @@ public class PeminjamanController {
     }
 
     @GetMapping("/{sort}/{sortBy}/{page}")
-    //@PreAuthorize("hasAuthority('Peminjaman')")
+    @PreAuthorize("hasAuthority('Peminjaman')")
     public ResponseEntity<Object> findByParam(
             @PathVariable(value = "sort") String sort,
             @PathVariable(value = "sortBy") String sortBy,

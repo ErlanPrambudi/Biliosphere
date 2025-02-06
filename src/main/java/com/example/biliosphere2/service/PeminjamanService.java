@@ -256,9 +256,9 @@ public class PeminjamanService implements IService<ValPeminjamanDTO> {
             respPeminjamanDTO.setJudulBuku(peminjaman.getBuku().getJudul());
         }
         // Mengatur dendaId jika ada
-        if (peminjaman.getDenda() != null) {
-            respPeminjamanDTO.setDendaId(peminjaman.getDenda().getId());
-        }
+//        if (peminjaman.getDenda() != null) {
+//            respPeminjamanDTO.setDendaId(peminjaman.getDenda().getId());
+//        }
         return respPeminjamanDTO;
     }
     public List<RespPeminjamanDTO> convertToListRespPeminjamanDTO(List<Peminjaman> peminjamanList) {
