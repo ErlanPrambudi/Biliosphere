@@ -5,6 +5,7 @@ import com.example.biliosphere2.model.User;
 import com.example.biliosphere2.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -20,16 +21,16 @@ public class UserController {
 
     @Transactional
     @PostMapping("")
-    @PreAuthorize("hasAuthority('User')")
-    public ResponseEntity<Object> save(@RequestBody ValUserDTO userDTO,
+//    @PreAuthorize("hasAuthority('User')")
+    public ResponseEntity<Object> save(@Valid @RequestBody  ValUserDTO userDTO,
                                        HttpServletRequest request) {
         User user = userService.convertToUser(userDTO);
         return userService.save(user, request);
     }
     @Transactional
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('User')")
-    public ResponseEntity<Object> update(@PathVariable("id") Long id,
+//    @PreAuthorize("hasAuthority('User')")
+    public ResponseEntity<Object> update(@Valid @PathVariable("id") Long id,
                                          @RequestBody ValUserDTO userDTO,
                                          HttpServletRequest request) {
         User user = userService.convertToUser(userDTO);
@@ -37,28 +38,28 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('User')")
+//    @PreAuthorize("hasAuthority('User')")
     public ResponseEntity<Object> delete(@PathVariable("id") Long id,
                                          HttpServletRequest request) {
         return userService.delete(id, request);
     }
 
     @GetMapping("")
-    @PreAuthorize("hasAuthority('User')")
+//    @PreAuthorize("hasAuthority('User')")
     public ResponseEntity<Object> findAll(Pageable pageable,
                                           HttpServletRequest request) {
         return userService.findAll(pageable, request);
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('User')")
+//    @PreAuthorize("hasAuthority('User')")
     public ResponseEntity<Object> findById(@PathVariable("id") Long id,
                                            HttpServletRequest request) {
         return userService.findById(id, request);
     }
 
     @GetMapping("/search/{columnName}/{value}")
-    @PreAuthorize("hasAuthority('User')")
+//    @PreAuthorize("hasAuthority('User')")
     public ResponseEntity<Object> findByParam(Pageable pageable,
                                               @PathVariable("columnName") String columnName,
                                               @PathVariable("value") String value,

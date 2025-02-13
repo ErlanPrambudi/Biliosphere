@@ -38,6 +38,7 @@ public class AuthController {
     @Autowired
     AppUserDetailService appUserDetailService;
 
+
     @PostMapping("/login")
     public ResponseEntity<Object> login(@Valid @RequestBody ValLoginDTO valLoginDTO,
                                         HttpServletRequest request) {
@@ -49,9 +50,14 @@ public class AuthController {
         return appUserDetailService.regis(appUserDetailService.convertToUser(regisDTO),request);
     }
 
-    @PostMapping("/verify-regis")
+    @PostMapping("/verify-otp")
     public ResponseEntity<Object> verifyRegister(@Valid @RequestBody ValVerifyRegisDTO valVerifyRegisDTO, HttpServletRequest request){
         return appUserDetailService.verifyRegis(appUserDetailService.convertToUser(valVerifyRegisDTO),request);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Object> logout(@RequestHeader("Authorization") String token, HttpServletRequest request) {
+        return appUserDetailService.logout(token, request);
     }
 
 

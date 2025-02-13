@@ -17,7 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.stereotype.Component;
 
 @Configuration
 @EnableWebSecurity
@@ -43,27 +42,29 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception {
-        http.
-                csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(
-                        request -> request
-                                .requestMatchers(
-                                        "auth/**")
-                                .permitAll()
-                                .anyRequest().authenticated()).
-                httpBasic(basic -> basic.authenticationEntryPoint(authenticationEntryPoint))
-                .exceptionHandling(Customizer.withDefaults())
-                .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider()).addFilterBefore(
-                        jwtFilter, UsernamePasswordAuthenticationFilter.class);
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .cors(Customizer.withDefaults()) // ✅ Aktifkan CORS
+                .csrf(AbstractHttpConfigurer::disable) // ✅ Matikan CSRF (karena pakai JWT)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/auth/**").permitAll() // ✅ Izinkan akses ke `/auth/**` tanpa login
+                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll() // ✅ Izinkan preflight OPTIONS
+                        .anyRequest().authenticated() // ✅ Semua request lain harus autentikasi
+                )
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint))
+                .logout(logout -> logout
+                        .logoutUrl("/auth/logout") // ✅ Endpoint logout
+                        .invalidateHttpSession(true) // ✅ Hapus sesi setelah logout
+                        .clearAuthentication(true)); // ✅ Hapus autentikasi setelah logout
 
         return http.build();
     }
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder(){
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(10);
     }
-
 }

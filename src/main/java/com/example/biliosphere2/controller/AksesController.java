@@ -40,7 +40,7 @@ public class AksesController {
     }
 
     @GetMapping("")
-    @PreAuthorize("hasAuthority('Akses')")
+//    @PreAuthorize("hasAuthority('Akses')")
     public ResponseEntity<Object> findAll(
             HttpServletRequest request){
         Pageable pageable = PageRequest.of(0,10, Sort.by("id"));//asc
@@ -48,13 +48,13 @@ public class AksesController {
     }
 
     @PostMapping("")
-    @PreAuthorize("hasAuthority('Akses')")
+//    @PreAuthorize("hasAuthority('Akses')")
     public ResponseEntity<Object> save(@Valid @RequestBody ValAksesDTO aksesDTO, HttpServletRequest request){
         return aksesService.save(aksesService.convertToAkses(aksesDTO),request);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('Akses')")
+//    @PreAuthorize("hasAuthority('Akses')")
     public ResponseEntity<Object> update(
             @PathVariable(value = "id") Long id,
             @Valid @RequestBody ValAksesDTO aksesDTO, HttpServletRequest request){
@@ -62,7 +62,7 @@ public class AksesController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('Akses')")
+//    @PreAuthorize("hasAuthority('Akses')")
     public ResponseEntity<Object> delete(
             @PathVariable(value = "id") Long id,
             HttpServletRequest request){
@@ -70,14 +70,14 @@ public class AksesController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('Akses')")
+//@PreAuthorize("hasAuthority('Akses')")
     public ResponseEntity<Object> findById(@PathVariable(value = "id") Long id,
                                            HttpServletRequest request){
         return aksesService.findById(id,request);
     }
 
     @GetMapping("/{sort}/{sortBy}/{page}")
-    @PreAuthorize("hasAuthority('Akses')")
+//    @PreAuthorize("hasAuthority('Akses')")
     public ResponseEntity<Object> findByParam(
             @PathVariable(value = "sort") String sort,
             @PathVariable(value = "sortBy") String sortBy,//name

@@ -59,10 +59,10 @@ public class Crypto {
     }
 
 //    public static void main(String[] args) {
-//        String strToEncrypt = "jdbc:sqlserver://localhost:1433;databaseName=Biliosphere3;schema=biliosphere3;trustServerCertificate=true";
+//        String strToEncrypt = "";
 //        System.out.println("Encryption Result : "+performEncrypt(strToEncrypt));
 //
-//        String strToDecrypt = "64a90dd4d2fa3a326854d37769e5e4ea6b41bb5ecddd5f062059672eeb9e7871554da18cc241cea04513946a511cc53a6856fa78bdbcdfddc5c96c3180c9ba2adabb651cfd3d43887cde3524c0692d05708e427d88a9075d6d7572fcfe6deddf40abb9d5b68ea489490ea1b371a98d73";//put text to decrypt in here
+//        String strToDecrypt = "ertyu";//put text to decrypt in here
 //      String decriptionResult = new Crypto().performDecrypt(strToDecrypt);
 //        System.out.println("Decryption Result : "+performDecrypt(strToDecrypt));
 //    }

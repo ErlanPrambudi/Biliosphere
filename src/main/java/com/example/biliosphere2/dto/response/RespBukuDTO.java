@@ -18,6 +18,15 @@ public class RespBukuDTO {
     private String namaKategori;
     private Integer stok;
 
+    // Constructor kosong (penting buat Spring & ModelMapper)
+    public RespBukuDTO() {}
+
+    // Constructor buat setting ID dan Judul
+    public RespBukuDTO(Long id, String judul) {
+        this.id = id;
+        this.judul = judul;
+    }
+
     public Long getId() {
         return id;
     }

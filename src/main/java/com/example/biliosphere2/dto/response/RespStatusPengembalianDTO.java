@@ -66,4 +66,12 @@ public class RespStatusPengembalianDTO {
     public void setUpdatedDate(Date updatedDate) {
         this.updatedDate = updatedDate;
     }
+    // Constructor kosong (wajib buat Spring & ModelMapper)
+    public RespStatusPengembalianDTO() {}
+
+    // Constructor dengan 2 parameter
+    public RespStatusPengembalianDTO(Long id, String status) {
+        this.id = id;
+        this.status = status;
+    }
 }

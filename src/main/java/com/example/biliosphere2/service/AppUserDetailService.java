@@ -22,6 +22,7 @@ import com.example.biliosphere2.repository.UserRepo;
 import com.example.biliosphere2.security.BcryptImpl;
 import com.example.biliosphere2.security.Crypto;
 import com.example.biliosphere2.security.JwtUtility;
+import com.example.biliosphere2.util.SendMailOTP;
 import com.example.biliosphere2.util.TransformationData;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -43,7 +44,8 @@ public class AppUserDetailService implements UserDetailsService {
 
     @Autowired
     private UserRepo userRepo;
-
+    @Autowired
+    private TokenBlacklistService tokenBlacklistService;
     @Autowired
     private ModelMapper modelMapper ;
     //    private ModelMapper modelMapper = new ModelMapper();
@@ -113,16 +115,16 @@ public class AppUserDetailService implements UserDetailsService {
                     return new ResponseHandler().handleResponse("DATA USERNAME/EMAIL/NO-HP SUDAH TERPAKAI",
                             HttpStatus.BAD_REQUEST,
                             null,"X01008",request);
-                }else{
+                }else {
                     /** PERNAH REGISTRASI TAPI BELUM SELESAI */
                     userDB.setAlamat(user.getAlamat());
                     userDB.setNoHp(user.getNoHp());
                     userDB.setEmail(user.getEmail());
                     userDB.setNama(user.getNama());
-                    userDB.setPassword(BcryptImpl.hash(user.getUsername()+user.getPassword()));
+                    userDB.setPassword(BcryptImpl.hash(user.getUsername() + user.getPassword()));
                     userDB.setTanggalLahir(user.getTanggalLahir());
                     userDB.setUpdatedDate(new Date());
-                    otp = random.nextInt(111111,999999);
+                    otp = random.nextInt(111111, 999999);
                     userDB.setOtp(BcryptImpl.hash(String.valueOf(otp)));
                     userDB.setAkses(akses);
                 }
@@ -139,9 +141,10 @@ public class AppUserDetailService implements UserDetailsService {
         /** kirim verifikasi email */
         Map<String,Object> mapResponse = new HashMap<>();
         if(OtherConfig.getEnableAutomation().equals("y")){
-            mapResponse.put("token", otp);
+            mapResponse.put("//ganti ini sebelum presentasi ngab//  otp :", otp);
         }
-        /** kalau mau send email, lihat di class ContohController API kirim-email  */
+    /** kalau mau send email, lihat di class ContohController API kirim-email  */
+        SendMailOTP.verifyRegisOTP("OTP Registrasi",user.getNama(),user.getEmail(),String.valueOf(otp));
 //        mapResponse.put("estafet",);//untuk security estafet work flow pada form
         return ResponseEntity.status(HttpStatus.OK).body(mapResponse);
     }
@@ -168,9 +171,22 @@ public class AppUserDetailService implements UserDetailsService {
 
         userDB.setOtp(BcryptImpl.hash(String.valueOf(random.nextInt(111111,999999))));
         userDB.setRegistered(true);
-        return ResponseEntity.status(HttpStatus.OK).body("Registrasi Berhasil !!");
+        return ResponseEntity.ok(Map.of("message", "Registrasi Berhasil !!"));
     }
+    public ResponseEntity<Object> logout(String token, HttpServletRequest request) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7); // Hapus prefix "Bearer "
+        }
 
+        // Tambahkan token ke blacklist
+        tokenBlacklistService.blacklistToken(token);
+
+        return new ResponseHandler().handleResponse("Logout berhasil",
+                HttpStatus.OK,
+                null,
+                "X01010",
+                request);
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

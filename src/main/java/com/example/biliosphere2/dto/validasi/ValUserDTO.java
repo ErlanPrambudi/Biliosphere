@@ -61,15 +61,19 @@ public class ValUserDTO {
             message = "Format No HP Tidak Valid , min 9 max 13 setelah angka 8, contoh : (0/62/+62)81111111")
     private String noHp;
 
+    @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
-    @JsonProperty("tanggal-lahir")
     private LocalDate tanggalLahir;
+
 
     @NotNull
     private RespAksesDTO akses;
 
+    @NotNull
+    @NotBlank
+    @NotEmpty
     private String nama;
     public String getNama() {
         return nama;

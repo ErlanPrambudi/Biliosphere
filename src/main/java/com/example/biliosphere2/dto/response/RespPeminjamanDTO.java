@@ -1,32 +1,28 @@
 package com.example.biliosphere2.dto.response;
 
-/*
- IntelliJ IDEA 2024.3 (Ultimate Edition)
- Build #IU-243.21565.193, built on November 13, 2024
- @Author Dell Erlan Prambudi
- Java Developer
- Created on 2/4/2025 4:30 PM
- @Last Modified 2/4/2025 4:30 PM
- Version 1.0
-*/
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class RespPeminjamanDTO {
     private Long id;
-    private Long userId;
-    private Long bukuId;
-    private String judulBuku; // tambahan untuk menampilkan judul buku
+    private RespUserDTO user;
+    private RespBukuDTO buku;
     private LocalDate tanggalPinjam;
     private LocalDate tanggalKembali;
-    private String statusPengembalianNama;
-    private Long dendaId;  // nested DTO untuk informasi denda
+    private RespStatusPengembalianDTO statusPengembalian;
+    //private RespDendaDTO denda;
     private String createdBy;
-    private LocalDateTime createdDate;
+    private LocalDate createdDate;
     private String updatedBy;
-    private LocalDateTime updatedDate;
+    private LocalDate updatedDate;
+    private BigDecimal jumlahDenda;
 
+    // Method otomatis hitung keterlambatan
+    public boolean isTerlambat() {
+        return tanggalKembali != null && tanggalKembali.isAfter(tanggalPinjam.plusDays(7));
+    }
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -35,28 +31,20 @@ public class RespPeminjamanDTO {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public RespUserDTO getUser() {
+        return user;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUser(RespUserDTO user) {
+        this.user = user;
     }
 
-    public Long getBukuId() {
-        return bukuId;
+    public RespBukuDTO getBuku() {
+        return buku;
     }
 
-    public void setBukuId(Long bukuId) {
-        this.bukuId = bukuId;
-    }
-
-    public String getJudulBuku() {
-        return judulBuku;
-    }
-
-    public void setJudulBuku(String judulBuku) {
-        this.judulBuku = judulBuku;
+    public void setBuku(RespBukuDTO buku) {
+        this.buku = buku;
     }
 
     public LocalDate getTanggalPinjam() {
@@ -75,21 +63,21 @@ public class RespPeminjamanDTO {
         this.tanggalKembali = tanggalKembali;
     }
 
-    public String getStatusPengembalianNama() {
-        return statusPengembalianNama;
+    public RespStatusPengembalianDTO getStatusPengembalian() {
+        return statusPengembalian;
     }
 
-    public void setStatusPengembalianNama(String statusPengembalianNama) {
-        this.statusPengembalianNama = statusPengembalianNama;
+    public void setStatusPengembalian(RespStatusPengembalianDTO statusPengembalian) {
+        this.statusPengembalian = statusPengembalian;
     }
 
-//    public Long getDendaId() {
-//        return dendaId;
+//    public RespDendaDTO getDenda() {
+//        return denda;
 //    }
-
-    public void setDendaId(Long dendaId) {
-        this.dendaId = dendaId;
-    }
+//
+//    public void setDenda(RespDendaDTO denda) {
+//        this.denda = denda;
+//    }
 
     public String getCreatedBy() {
         return createdBy;
@@ -99,11 +87,11 @@ public class RespPeminjamanDTO {
         this.createdBy = createdBy;
     }
 
-    public LocalDateTime getCreatedDate() {
+    public LocalDate getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(LocalDateTime createdDate) {
+    public void setCreatedDate(LocalDate createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -115,11 +103,11 @@ public class RespPeminjamanDTO {
         this.updatedBy = updatedBy;
     }
 
-    public LocalDateTime getUpdatedDate() {
+    public LocalDate getUpdatedDate() {
         return updatedDate;
     }
 
-    public void setUpdatedDate(LocalDateTime updatedDate) {
+    public void setUpdatedDate(LocalDate updatedDate) {
         this.updatedDate = updatedDate;
     }
 }

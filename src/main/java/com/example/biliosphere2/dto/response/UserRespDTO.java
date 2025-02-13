@@ -1,5 +1,7 @@
 package com.example.biliosphere2.dto.response;
 
+import java.time.LocalDate;
+
 /*
 IntelliJ IDEA 2024.3 (Ultimate Edition)
 Build #IU-243.21565.193, built on November 13, 2024
@@ -18,6 +20,16 @@ public class UserRespDTO {
     private String noHp;
     private RespAksesDTO akses;
     private String nama;
+    private LocalDate tanggalLahir;
+
+    public LocalDate getTanggalLahir() {
+        return tanggalLahir;
+    }
+
+    public void setTanggalLahir(LocalDate tanggalLahir) {
+        this.tanggalLahir = tanggalLahir;
+    }
+
     public String getNama() {
         return nama;
     }

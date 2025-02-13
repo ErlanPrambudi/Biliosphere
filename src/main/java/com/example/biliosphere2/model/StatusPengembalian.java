@@ -14,7 +14,7 @@ Created on 2/5/2025 2:54 AM
 Version 1.0
 */
 @Entity
-@Table(name = "MstStatusPegembalian")
+@Table(name = "MstStatusPengembalian")
 public class StatusPengembalian {
 
     @Id

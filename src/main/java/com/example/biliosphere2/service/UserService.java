@@ -55,7 +55,15 @@ public class UserService implements IService<User> {
             user.setPassword(BcryptImpl.hash(user.getUsername()+user.getPassword()));
             user.setCreatedBy("erlan");
             user.setCreatedDate(new Date());
+            System.out.println("DEBUG - Data yang akan disimpan:");
+            System.out.println("Nama: " + user.getNama());
+            System.out.println("Tanggal Lahir: " + user.getTanggalLahir()); // 🔍 Cek apakah null
+            System.out.println("Akses ID: " + (user.getAkses() != null ? user.getAkses().getId() : "NULL"));
+
+
+
             userRepo.save(user);
+
         } catch (Exception e) {
             LoggingFile.logException("UserService", "save --> Line 42", e, OtherConfig.getEnableLogFile());
             return GlobalResponse.dataGagalDisimpan("FEAUT04001", request);

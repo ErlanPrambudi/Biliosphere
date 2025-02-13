@@ -46,13 +46,13 @@ public class BukuController {
     }
 
     @PostMapping("")
-    @PreAuthorize("hasAuthority('Buku')")
+//    @PreAuthorize("hasAuthority('Buku')")
     public ResponseEntity<Object> save(@Valid @RequestBody ValBukuDTO buku, HttpServletRequest request) {
         return bukuService.save(buku, request);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('Buku')")
+//    @PreAuthorize("hasAuthority('Buku')")
     public ResponseEntity<Object> update(
             @PathVariable(value = "id") Long id,
             @Valid @RequestBody ValBukuDTO buku,
@@ -61,7 +61,7 @@ public class BukuController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('Buku')")
+//    @PreAuthorize("hasAuthority('Buku')")
     public ResponseEntity<Object> delete(
             @PathVariable(value = "id") Long id,
             HttpServletRequest request) {
@@ -69,7 +69,7 @@ public class BukuController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('Buku')")
+//    @PreAuthorize("hasAuthority('Buku')")
     public ResponseEntity<Object> findById(
             @PathVariable(value = "id") Long id,
             HttpServletRequest request) {
@@ -77,7 +77,7 @@ public class BukuController {
     }
 
     @GetMapping("/{sort}/{sortBy}/{page}")
-    @PreAuthorize("hasAuthority('Buku')")
+//    @PreAuthorize("hasAuthority('Buku')")
     public ResponseEntity<Object> findByParam(
             @PathVariable(value = "sort") String sort,
             @PathVariable(value = "sortBy") String sortBy,

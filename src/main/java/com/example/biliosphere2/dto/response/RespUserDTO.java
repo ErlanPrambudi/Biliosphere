@@ -15,6 +15,8 @@ Version 1.0
 import com.example.biliosphere2.model.Akses;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+
 public class RespUserDTO {
     private Long id;
     private String username;
@@ -23,7 +25,24 @@ public class RespUserDTO {
     private String alamat;
     private String noHp;
     private RespAksesDTO akses;
+    private LocalDate tanggalLahir;
+    private String nama;
 
+    public String getNama() {
+        return nama;
+    }
+
+    public void setNama(String nama) {
+        this.nama = nama;
+    }
+
+    public LocalDate getTanggalLahir() {
+        return tanggalLahir;
+    }
+
+    public void setTanggalLahir(LocalDate tanggalLahir) {
+        this.tanggalLahir = tanggalLahir;
+    }
 
     public Long getId() {
         return id;

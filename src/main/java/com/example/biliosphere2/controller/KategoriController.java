@@ -35,13 +35,13 @@ public class KategoriController {
     }
 
     @PostMapping("")
-    @PreAuthorize("hasAuthority('Kategori')")
+//    @PreAuthorize("hasAuthority('Kategori')")
     public ResponseEntity<Object> save(@Valid @RequestBody ValKategoriDTO kategori, HttpServletRequest request){
         return kategoriService.save(kategori,request);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('Kategori')")
+//    @PreAuthorize("hasAuthority('Kategori')")
     public ResponseEntity<Object> update(
             @PathVariable(value = "id") Long id,
             @Valid @RequestBody ValKategoriDTO kategori, HttpServletRequest request){
@@ -49,7 +49,7 @@ public class KategoriController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('Kategori')")
+//    @PreAuthorize("hasAuthority('Kategori')")
     public ResponseEntity<Object> delete(
             @PathVariable(value = "id") Long id,
             HttpServletRequest request){
@@ -57,14 +57,14 @@ public class KategoriController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('Kategori')")
+//    @PreAuthorize("hasAuthority('Kategori')")
     public ResponseEntity<Object> findById(@PathVariable(value = "id") Long id,
                                            HttpServletRequest request){
         return kategoriService.findById(id,request);
     }
 
     @GetMapping("/{sort}/{sortBy}/{page}")
-    @PreAuthorize("hasAuthority('Kategori')")
+//    @PreAuthorize("hasAuthority('Kategori')")
     public ResponseEntity<Object> findByParam(
             @PathVariable(value = "sort") String sort,
             @PathVariable(value = "sortBy") String sortBy,

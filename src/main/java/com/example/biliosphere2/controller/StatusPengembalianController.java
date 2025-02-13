@@ -24,28 +24,28 @@ public class StatusPengembalianController {
 
     // Endpoint to save a new status
     @PostMapping("")
-    @PreAuthorize("hasAuthority('Status-pengembalian')")
+//    @PreAuthorize("hasAuthority('Status-pengembalian')")
     public ResponseEntity<Object> save(@Valid @RequestBody ValStatusPengembalianDTO dto, HttpServletRequest request) {
         return statusPengembalianService.save(dto, request);
     }
 
     // Endpoint to update an existing status by ID
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('Status-pengembalian')")
+//    @PreAuthorize("hasAuthority('Status-pengembalian')")
     public ResponseEntity<Object> update(@PathVariable Long id, @Valid @RequestBody ValStatusPengembalianDTO dto, HttpServletRequest request) {
         return statusPengembalianService.update(id, dto, request);
     }
 
     // Endpoint to delete a status by ID
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('Status-pengembalian')")
+//    @PreAuthorize("hasAuthority('Status-pengembalian')")
     public ResponseEntity<Object> delete(@PathVariable Long id, HttpServletRequest request) {
         return statusPengembalianService.delete(id, request);
     }
 
     // Endpoint to get all statuses with pagination
     @GetMapping
-    @PreAuthorize("hasAuthority('Status-pengembalian')")
+//    @PreAuthorize("hasAuthority('Status-pengembalian')")
     public ResponseEntity<Object> findAll(Pageable pageable, HttpServletRequest request) {
         // Default pagination if no params are passed (using PageRequest with default values)
         if (pageable == null) {
@@ -62,7 +62,7 @@ public class StatusPengembalianController {
 
     // Endpoint to search statuses by a parameter (status name or part of it)
     @GetMapping("/search")
-    @PreAuthorize("hasAuthority('Status-pengembalian')")
+//    @PreAuthorize("hasAuthority('Status-pengembalian')")
     public ResponseEntity<Object> findByParam(@RequestParam String value, Pageable pageable, HttpServletRequest request) {
         // Default pagination if no params are passed (using PageRequest with default values)
         if (pageable == null) {

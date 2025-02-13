@@ -15,37 +15,38 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-
-import java.util.Random;
+import jakarta.annotation.PostConstruct;
 
 @Configuration
 @PropertySource("classpath:other.properties")
 public class OtherConfig {
 
+    @Value("${enable.logfile}")
+    private String enableLogFileValue;
+
+    @Value("${enable.automation}")
+    private String enableAutomationValue;
+
     private static String enableLogFile;
     private static String enableAutomation;
 
-    public static String getEnableAutomation() {
-        return enableAutomation;
+    // ✅ Pastikan nilai dari @Value masuk ke static variable setelah bean dibuat
+    @PostConstruct
+    public void init() {
+        enableLogFile = enableLogFileValue;
+        enableAutomation = enableAutomationValue;
     }
 
-    @Value("${enable.automation}")
-    private void setEnableAutomation(String enableAutomation) {
-        OtherConfig.enableAutomation = enableAutomation;
+    public static String getEnableAutomation() {
+        return enableAutomation;
     }
 
     public static String getEnableLogFile() {
         return enableLogFile;
     }
 
-    @Value("${enable.logfile}")
-    private void setEnableLogFile(String enableLogFile) {
-        OtherConfig.enableLogFile = enableLogFile;
-    }
-
     @Bean
-    public ModelMapper modelMapper(){
+    public ModelMapper modelMapper() {
         return new ModelMapper();
     }
 }
-
