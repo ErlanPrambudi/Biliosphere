@@ -1,5 +1,7 @@
 package com.example.biliosphere2.model;
 
+import com.example.biliosphere2.model.enums.StatusPembayaran;
+import com.example.biliosphere2.model.enums.StatusPengembalianEnum;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -31,13 +33,15 @@ public class Peminjaman {
     @Column(name = "tanggalKembali")
     private LocalDate tanggalKembali;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "IDStatusPengembalian", nullable = false, foreignKey = @ForeignKey(name = "fk_peminjaman_statuspengembalian"))
-    private StatusPengembalian statusPengembalian;
+    @Enumerated(EnumType.STRING) // Simpan enum sebagai string di database
+    @Column(name = "status_pengembalian")
+    private StatusPengembalianEnum statusPengembalian;
 
     @OneToOne(mappedBy = "peminjaman", cascade = CascadeType.ALL, orphanRemoval = true)
     private Denda denda;
-
+    @Column(name = "status_pembayaran")
+    @Enumerated(EnumType.STRING)
+    private StatusPembayaran statusPembayaran;
 
     @Column(name = "createdBy", updatable = false, nullable = false)
     private String createdBy;
@@ -65,6 +69,14 @@ public class Peminjaman {
 
     public User getUser() {
         return user;
+    }
+
+    public StatusPembayaran getStatusPembayaran() {
+        return statusPembayaran;
+    }
+
+    public void setStatusPembayaran(StatusPembayaran statusPembayaran) {
+        this.statusPembayaran = statusPembayaran;
     }
 
     public void setUser(User user) {
@@ -103,14 +115,13 @@ public class Peminjaman {
         this.tanggalKembali = tanggalKembali;
     }
 
-    public StatusPengembalian getStatusPengembalian() {
+    public StatusPengembalianEnum getStatusPengembalian() {
         return statusPengembalian;
     }
 
-    public void setStatusPengembalian(StatusPengembalian statusPengembalian) {
+    public void setStatusPengembalian(StatusPengembalianEnum statusPengembalian) {
         this.statusPengembalian = statusPengembalian;
     }
-
 
     public String getCreatedBy() {
         return createdBy;

@@ -14,6 +14,8 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.NotNull;
 
+import java.math.BigDecimal;
+
 public class ValBukuDTO {
     @NotBlank(message = "Judul tidak boleh kosong")
     @Size(max = 255, message = "Judul maksimal 255 karakter")
@@ -37,6 +39,17 @@ public class ValBukuDTO {
     @NotNull(message = "Stok tidak boleh kosong")
     @Min(value = 0, message = "Stok minimal 0")
     private Integer stok;
+
+    @NotNull(message = "Harga tidak boleh kosong")
+    private BigDecimal harga;
+
+    public BigDecimal getHarga() {
+        return harga;
+    }
+
+    public void setHarga(BigDecimal harga) {
+        this.harga = harga;
+    }
 
     public String getJudul() {
         return judul;

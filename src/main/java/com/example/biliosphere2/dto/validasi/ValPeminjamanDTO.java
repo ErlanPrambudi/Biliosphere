@@ -1,6 +1,7 @@
 package com.example.biliosphere2.dto.validasi;
 
 
+import com.example.biliosphere2.model.enums.StatusPembayaran;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -18,11 +19,12 @@ public class ValPeminjamanDTO {
 
     private LocalDate tanggalKembali;
 
-    @NotNull(message = "ID Status pengembalian tidak boleh kosong")
-    private Long idStatusPengembalian;
+    @NotNull(message = " Status pengembalian tidak boleh kosong")
+    private String statusPengembalian;
 
     private Long idDenda;
-    private String statusPembayaran;
+    @NotNull
+    private StatusPembayaran statusPembayaran;
 
     @AssertTrue(message = "Tanggal kembali harus setelah tanggal pinjam")
     public boolean isTanggalKembaliValid() {
@@ -58,11 +60,11 @@ public class ValPeminjamanDTO {
         return tanggalKembali;
     }
 
-    public String getStatusPembayaran() {
+    public StatusPembayaran getStatusPembayaran() {
         return statusPembayaran;
     }
 
-    public void setStatusPembayaran(String statusPembayaran) {
+    public void setStatusPembayaran(StatusPembayaran statusPembayaran) {
         this.statusPembayaran = statusPembayaran;
     }
 
@@ -70,12 +72,12 @@ public class ValPeminjamanDTO {
         this.tanggalKembali = tanggalKembali;
     }
 
-    public Long getIdStatusPengembalian() {
-        return idStatusPengembalian;
+    public String getStatusPengembalian() {
+        return statusPengembalian;
     }
 
-    public void setIdStatusPengembalian(Long idStatusPengembalian) {
-        this.idStatusPengembalian = idStatusPengembalian;
+    public void setStatusPengembalian(String statusPengembalian) {
+        this.statusPengembalian = statusPengembalian;
     }
 
     public Long getIdDenda() {

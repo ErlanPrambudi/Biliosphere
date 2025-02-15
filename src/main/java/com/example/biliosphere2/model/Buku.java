@@ -12,6 +12,7 @@ Version 1.0
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -34,6 +35,9 @@ public class Buku {
 
     @Column(name = "tahunTerbit")
     private Integer tahunTerbit;
+
+    @Column(name = "harga", nullable = false, precision = 10, scale = 2)
+    private BigDecimal harga;
 
     @ManyToOne
     @JoinColumn(name = "IDKategori", foreignKey = @ForeignKey(name = "fk-buku-to-kategori"))
@@ -63,6 +67,14 @@ public class Buku {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public BigDecimal getHarga() {
+        return harga;
+    }
+
+    public void setHarga(BigDecimal harga) {
+        this.harga = harga;
     }
 
     public String getJudul() {

@@ -14,10 +14,13 @@ import com.example.biliosphere2.model.Denda;
 import com.example.biliosphere2.model.Peminjaman;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
 import java.util.Optional;
-import java.util.List;
 
 @Repository
 public interface DendaRepo extends JpaRepository<Denda, Long> {
-    Optional<Denda> findByPeminjaman(Peminjaman peminjaman); // ✅ Tambahkan ini
+
+    // ✅ Cari denda berdasarkan peminjaman
+    Optional<Denda> findByPeminjaman(Peminjaman peminjaman);
 }
+

@@ -1,6 +1,5 @@
 package com.example.biliosphere2.dto.response;
 
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -10,19 +9,28 @@ public class RespPeminjamanDTO {
     private RespBukuDTO buku;
     private LocalDate tanggalPinjam;
     private LocalDate tanggalKembali;
-    private RespStatusPengembalianDTO statusPengembalian;
-    //private RespDendaDTO denda;
+    private String statusPengembalian; // ✅ Ubah ke String karena Enum tidak punya ID
+    private BigDecimal jumlahDenda;
     private String createdBy;
+    private String statusPembayaran;
     private LocalDate createdDate;
     private String updatedBy;
     private LocalDate updatedDate;
-    private BigDecimal jumlahDenda;
 
-    // Method otomatis hitung keterlambatan
+    // ✅ Method otomatis hitung keterlambatan
     public boolean isTerlambat() {
         return tanggalKembali != null && tanggalKembali.isAfter(tanggalPinjam.plusDays(7));
     }
-    // Getters and Setters
+
+    public String getStatusPembayaran() {
+        return statusPembayaran;
+    }
+
+    public void setStatusPembayaran(String statusPembayaran) {
+        this.statusPembayaran = statusPembayaran;
+    }
+
+    // ✅ Getters and Setters
     public Long getId() {
         return id;
     }
@@ -63,21 +71,21 @@ public class RespPeminjamanDTO {
         this.tanggalKembali = tanggalKembali;
     }
 
-    public RespStatusPengembalianDTO getStatusPengembalian() {
+    public String getStatusPengembalian() { // ✅ Langsung String
         return statusPengembalian;
     }
 
-    public void setStatusPengembalian(RespStatusPengembalianDTO statusPengembalian) {
+    public void setStatusPengembalian(String statusPengembalian) { // ✅ Setter juga langsung String
         this.statusPengembalian = statusPengembalian;
     }
 
-//    public RespDendaDTO getDenda() {
-//        return denda;
-//    }
-//
-//    public void setDenda(RespDendaDTO denda) {
-//        this.denda = denda;
-//    }
+    public BigDecimal getJumlahDenda() { // ✅ Getter untuk jumlah denda
+        return jumlahDenda;
+    }
+
+    public void setJumlahDenda(BigDecimal jumlahDenda) { // ✅ Setter untuk jumlah denda
+        this.jumlahDenda = jumlahDenda;
+    }
 
     public String getCreatedBy() {
         return createdBy;

@@ -131,4 +131,3 @@ public class Denda {
         this.updatedBy = updatedBy;
     }
 }
-

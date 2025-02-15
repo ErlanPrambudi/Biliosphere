@@ -1,5 +1,7 @@
 package com.example.biliosphere2.dto.response;
 
+import java.math.BigDecimal;
+
 /*
 IntelliJ IDEA 2024.3 (Ultimate Edition)
 Build #IU-243.21565.193, built on November 13, 2024
@@ -17,6 +19,8 @@ public class RespBukuDTO {
     private Integer tahunTerbit;
     private String namaKategori;
     private Integer stok;
+    private BigDecimal harga;
+
 
     // Constructor kosong (penting buat Spring & ModelMapper)
     public RespBukuDTO() {}
@@ -81,5 +85,13 @@ public class RespBukuDTO {
 
     public void setStok(Integer stok) {
         this.stok = stok;
+    }
+
+    public BigDecimal getHarga() {
+        return harga;
+    }
+
+    public void setHarga(BigDecimal harga) {
+        this.harga = harga;
     }
 }

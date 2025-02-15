@@ -12,5 +12,5 @@ Version 1.0
 
 public enum StatusPembayaran {
     BELUM_DIBAYAR,
-    SUDAH_DIBAYAR
+    LUNAS
 }

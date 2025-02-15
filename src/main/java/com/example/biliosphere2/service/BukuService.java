@@ -111,6 +111,7 @@ public class BukuService implements IService<ValBukuDTO> {
             bukuDB.setPenerbit(bukuDTO.getPenerbit());
             bukuDB.setTahunTerbit(bukuDTO.getTahunTerbit());
             bukuDB.setStok(bukuDTO.getStok());
+            bukuDB.setHarga(bukuDTO.getHarga());
             bukuDB.setKategori(kategoriOptional.get());
 
             bukuRepo.save(bukuDB);
