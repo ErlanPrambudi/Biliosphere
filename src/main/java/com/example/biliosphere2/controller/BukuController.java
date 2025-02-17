@@ -22,6 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -97,6 +98,14 @@ public class BukuController {
         }
 
         return bukuService.findByParam(pageable, column, value, request);
+    }
+    // ✅ Endpoint baru untuk upload gambar buku
+    @PostMapping("/upload/{judul}")
+    public ResponseEntity<Object> uploadImage(
+            @PathVariable String judul,
+            @RequestParam("file") MultipartFile file,
+            HttpServletRequest request) {
+        return bukuService.uploadImage(judul, file, request); // Kirim langsung MultipartFile
     }
 
     public void filterColumnByMap() {

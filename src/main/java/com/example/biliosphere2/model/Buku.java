@@ -39,6 +39,9 @@ public class Buku {
     @Column(name = "harga", nullable = false, precision = 10, scale = 2)
     private BigDecimal harga;
 
+    @Column(name = "LinkPicture")
+    private String linkImage;
+
     @ManyToOne
     @JoinColumn(name = "IDKategori", foreignKey = @ForeignKey(name = "fk-buku-to-kategori"))
     private Kategori kategori;
@@ -71,6 +74,16 @@ public class Buku {
 
     public BigDecimal getHarga() {
         return harga;
+    }
+
+
+
+    public String getLinkImage() {
+        return linkImage;
+    }
+
+    public void setLinkImage(String linkImage) {
+        this.linkImage = linkImage;
     }
 
     public void setHarga(BigDecimal harga) {

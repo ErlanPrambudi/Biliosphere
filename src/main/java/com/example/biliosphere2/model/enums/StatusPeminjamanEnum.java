@@ -10,6 +10,6 @@ Created on 2/16/2025 4:23 AM
 Version 1.0
 */
 
-public enum StatusPeminjaman {
+public enum StatusPeminjamanEnum {
     DIAJUKAN, DISETUJUI, DITOLAK
 }

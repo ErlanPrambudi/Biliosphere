@@ -13,6 +13,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 
@@ -42,6 +43,17 @@ public class ValBukuDTO {
 
     @NotNull(message = "Harga tidak boleh kosong")
     private BigDecimal harga;
+    private MultipartFile file;
+
+    // getter
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    // setter
+    public void setFile(MultipartFile file) {
+        this.file = file;
+    }
 
     public BigDecimal getHarga() {
         return harga;

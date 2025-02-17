@@ -27,6 +27,11 @@ public interface PeminjamanRepo extends JpaRepository<Peminjaman, Long> {
     // ✅ Cek apakah user sudah meminjam buku ini sebelumnya
     boolean existsByUser_IdAndBuku_Id(Long userId, Long bukuId);
 
+    boolean existsByUser_IdAndBuku_IdAndStatusPengembalianNotInAndTanggalKembaliIsNull(
+            Long userId,
+            Long bukuId,
+            List<StatusPengembalianEnum> statusList
+    );
     // ✅ Cari semua peminjaman yang belum dikembalikan (tanggalKembali masih null)
     List<Peminjaman> findByTanggalKembaliIsNull();
 

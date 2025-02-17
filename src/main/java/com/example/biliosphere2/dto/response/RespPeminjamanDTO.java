@@ -16,10 +16,19 @@ public class RespPeminjamanDTO {
     private LocalDate createdDate;
     private String updatedBy;
     private LocalDate updatedDate;
+    private String statusPeminjaman;
 
     // ✅ Method otomatis hitung keterlambatan
     public boolean isTerlambat() {
         return tanggalKembali != null && tanggalKembali.isAfter(tanggalPinjam.plusDays(7));
+    }
+
+    public String getStatusPeminjaman() {
+        return statusPeminjaman;
+    }
+
+    public void setStatusPeminjaman(String statusPeminjaman) {
+        this.statusPeminjaman = statusPeminjaman;
     }
 
     public String getStatusPembayaran() {

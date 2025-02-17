@@ -19,11 +19,13 @@ public class ValPeminjamanDTO {
 
     private LocalDate tanggalKembali;
 
-    @NotNull(message = " Status pengembalian tidak boleh kosong")
+//    @NotNull(message = " Status pengembalian tidak boleh kosong")
     private String statusPengembalian;
 
+    private String statusPeminjaman;
+
     private Long idDenda;
-    @NotNull
+//    @NotNull
     private StatusPembayaran statusPembayaran;
 
     @AssertTrue(message = "Tanggal kembali harus setelah tanggal pinjam")
@@ -32,6 +34,16 @@ public class ValPeminjamanDTO {
     }
 
     // Getters and Setters
+
+
+    public String getStatusPeminjaman() {
+        return statusPeminjaman;
+    }
+
+    public void setStatusPeminjaman(String statusPeminjaman) {
+        this.statusPeminjaman = statusPeminjaman;
+    }
+
     public Long getIdUser() {
         return idUser;
     }

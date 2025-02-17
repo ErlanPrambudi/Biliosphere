@@ -11,14 +11,10 @@ Version 1.0
 */
 
 public enum StatusPengembalianEnum {
-    DIKEMBALIKAN,
-    DIPINJAM,
-    TERLAMBAT,
-    RUSAK_RINGAN,
-    RUSAK_BERAT,
-    HILANG,
-    DIGANTI,
-    RUSAK_RINGAN_TERLAMBAT,
-    RUSAK_BERAT_TERLAMBAT,
-    HILANG_TERLAMBAT
+    DIPINJAM,                    // Status awal saat buku masih dipinjam
+    DIKEMBALIKAN,               // Buku dikembalikan tepat waktu dalam kondisi baik
+    DIKEMBALIKAN_TERLAMBAT,     // Buku dikembalikan terlambat dalam kondisi baik
+    DIKEMBALIKAN_RUSAK_RINGAN,  // Buku dikembalikan dengan kerusakan ringan
+    DIKEMBALIKAN_RUSAK_BERAT,   // Buku dikembalikan dengan kerusakan berat
+    HILANG                      // Buku dilaporkan hilang
 }

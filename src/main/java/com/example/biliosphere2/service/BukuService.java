@@ -9,8 +9,19 @@ Created on 2/4/2025 5:14 AM
 @Last Modified 2/4/2025 5:14 AM
 Version 1.0
 */
-
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.io.IOException;
 import com.example.biliosphere2.config.OtherConfig;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.example.biliosphere2.core.IService;
 import com.example.biliosphere2.dto.response.RespBukuDTO;
 import com.example.biliosphere2.dto.validasi.ValBukuDTO;
@@ -32,12 +43,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
 @Transactional
 public class BukuService implements IService<ValBukuDTO> {
+    @Autowired
+    private Cloudinary cloudinary;
+    public static final String BASE_URL_IMAGE = System.getProperty("book.dir")+"\\image-saved";
+    private static Path rootPath;
 
     @Autowired
     private BukuRepo bukuRepo;
@@ -82,6 +99,46 @@ public class BukuService implements IService<ValBukuDTO> {
         }
         return GlobalResponse.dataBerhasilDisimpan(request);
     }
+    @Transactional
+    public ResponseEntity<Object> uploadImage(String judul, MultipartFile file, HttpServletRequest request) {
+        try {
+            // ✅ Cek apakah buku dengan judul ada di database
+            Optional<Buku> bukuOptional = bukuRepo.findByJudul(judul);
+            if (bukuOptional.isEmpty()) {
+                return GlobalResponse.dataTidakDitemukan(request);
+            }
+
+            // ✅ Validasi file
+            if (file == null || file.isEmpty()) {
+                return ResponseEntity.badRequest().body("❌ File gambar tidak boleh kosong!");
+            }
+
+            // ✅ Upload gambar ke Cloudinary
+            Map<String, Object> uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+
+            // ✅ Ambil URL gambar dari Cloudinary
+            String imageUrl = uploadResult.get("secure_url").toString();
+
+            // ✅ Update entitas Buku dengan URL gambar
+            Buku bukuDB = bukuOptional.get();
+            bukuDB.setUpdatedBy(String.valueOf(bukuDB.getId()));
+            bukuDB.setUpdatedDate(new Date());
+            bukuDB.setLinkImage(imageUrl);
+
+            // ✅ Simpan perubahan di database
+            bukuRepo.save(bukuDB);
+
+            // ✅ Response sukses
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "✅ Foto berhasil diupload");
+            response.put("url-img", imageUrl);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("❌ Gagal mengupload foto!");
+        }
+    }
+
 
     @Override
     @Transactional

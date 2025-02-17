@@ -20,15 +20,28 @@ public class RespBukuDTO {
     private String namaKategori;
     private Integer stok;
     private BigDecimal harga;
+    private String linkImage;
 
 
     // Constructor kosong (penting buat Spring & ModelMapper)
     public RespBukuDTO() {}
 
     // Constructor buat setting ID dan Judul
-    public RespBukuDTO(Long id, String judul) {
+    public RespBukuDTO(Long id, String judul, String penulis,  BigDecimal harga, String linkImage) {
         this.id = id;
         this.judul = judul;
+        this.penulis = penulis;
+        this.harga = harga;
+        this.linkImage = linkImage;
+    }
+
+
+    public String getLinkImage() {
+        return linkImage;
+    }
+
+    public void setLinkImage(String linkImage) {
+        this.linkImage = linkImage;
     }
 
     public Long getId() {

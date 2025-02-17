@@ -40,7 +40,7 @@ public class DendaService {
         LocalDate tanggalKembali = peminjaman.getTanggalKembali();
         LocalDate today = LocalDate.now();
 
-        // Jika buku belum dikembalikan, pakai tanggal hari ini untuk hitung keterlambatan
+        // Jika buku belum dikembalikan, pakai tanggal hari ini
         if (tanggalKembali == null) {
             tanggalKembali = today;
         }
@@ -56,23 +56,23 @@ public class DendaService {
         }
 
         // Konstanta untuk denda
-        final BigDecimal DENDA_PER_HARI = BigDecimal.valueOf(5000); // Ubah ke 5000/hari
+        final BigDecimal DENDA_PER_HARI = BigDecimal.valueOf(5000);
         final BigDecimal DENDA_RUSAK_RINGAN = BigDecimal.valueOf(30000);
 
-        // Hitung denda berdasarkan status pengembalian
+        // Hitung denda berdasarkan status pengembalian yang baru
         switch (status) {
-            case TERLAMBAT -> {
+            case DIKEMBALIKAN_TERLAMBAT -> {
                 if (daysLate > 0) {
                     denda = denda.add(BigDecimal.valueOf(daysLate).multiply(DENDA_PER_HARI));
                 }
             }
-            case RUSAK_RINGAN -> denda = denda.add(DENDA_RUSAK_RINGAN);
-            case RUSAK_BERAT -> {
-                Buku buku = getBuku(peminjaman);
-                BigDecimal hargaBuku = buku.getHarga();
-                denda = denda.add(hargaBuku.multiply(BigDecimal.valueOf(0.50)));
+            case DIKEMBALIKAN_RUSAK_RINGAN -> {
+                denda = denda.add(DENDA_RUSAK_RINGAN);
+                if (daysLate > 0) {
+                    denda = denda.add(BigDecimal.valueOf(daysLate).multiply(DENDA_PER_HARI));
+                }
             }
-            case RUSAK_BERAT_TERLAMBAT -> {
+            case DIKEMBALIKAN_RUSAK_BERAT -> {
                 Buku buku = getBuku(peminjaman);
                 BigDecimal hargaBuku = buku.getHarga();
                 denda = denda.add(hargaBuku.multiply(BigDecimal.valueOf(0.50)));
@@ -83,16 +83,6 @@ public class DendaService {
             case HILANG -> {
                 Buku buku = getBuku(peminjaman);
                 denda = denda.add(buku.getHarga());
-            }
-            case HILANG_TERLAMBAT -> {
-                Buku buku = getBuku(peminjaman);
-                denda = denda.add(buku.getHarga());
-                if (daysLate > 0) {
-                    denda = denda.add(BigDecimal.valueOf(daysLate).multiply(DENDA_PER_HARI));
-                }
-            }
-            case RUSAK_RINGAN_TERLAMBAT -> {
-                denda = denda.add(DENDA_RUSAK_RINGAN);
                 if (daysLate > 0) {
                     denda = denda.add(BigDecimal.valueOf(daysLate).multiply(DENDA_PER_HARI));
                 }

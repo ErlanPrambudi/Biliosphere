@@ -11,6 +11,7 @@ import com.example.biliosphere2.dto.validasi.ValPeminjamanDTO;
 import com.example.biliosphere2.handler.ResponseHandler;
 import com.example.biliosphere2.model.*;
 import com.example.biliosphere2.model.enums.StatusPembayaran;
+import com.example.biliosphere2.model.enums.StatusPeminjamanEnum;
 import com.example.biliosphere2.model.enums.StatusPengembalianEnum;
 import com.example.biliosphere2.repository.*;
 import com.example.biliosphere2.util.GlobalResponse;
@@ -53,13 +54,12 @@ public class PeminjamanService implements IService<ValPeminjamanDTO> {
     @Autowired
     private TransformPagination transformPagination;
 
+
     public ResponseEntity<Object> save(ValPeminjamanDTO peminjamanDTO, HttpServletRequest request) {
         try {
-
             if (peminjamanDTO == null) {
                 return GlobalResponse.dataTidakValid("FVAUT03001", request);
             }
-            StatusPembayaran statusPembayaranPeminjaman = StatusPembayaran.BELUM_DIBAYAR; // Default value
 
             // Cek user & buku
             Optional<User> user = userRepo.findById(peminjamanDTO.getIdUser());
@@ -68,28 +68,55 @@ public class PeminjamanService implements IService<ValPeminjamanDTO> {
                 return GlobalResponse.dataTidakDitemukan(request);
             }
 
-            // Validasi status pengembalian dari Enum
-            StatusPengembalianEnum statusEnum;
-            try {
-                statusEnum = StatusPengembalianEnum.valueOf(peminjamanDTO.getStatusPengembalian().toUpperCase());
-            } catch (IllegalArgumentException e) {
-                return ResponseEntity.badRequest().body("❌ Status pengembalian tidak valid!");
+            // Cek apakah user masih meminjam buku yang sama
+            if (peminjamanRepo.existsByUser_IdAndBuku_IdAndStatusPengembalianNotInAndTanggalKembaliIsNull(
+                    peminjamanDTO.getIdUser(),
+                    peminjamanDTO.getIdBuku(),
+                    Arrays.asList(StatusPengembalianEnum.DIKEMBALIKAN))) {
+                return ResponseEntity.badRequest().body("❌ User masih meminjam buku yang sama!");
+            }
+
+            // Cek jumlah buku yang sedang dipinjam user
+            long activeBooksCount = peminjamanRepo.countByUser_IdAndTanggalKembaliIsNull(peminjamanDTO.getIdUser());
+            if (activeBooksCount >= 2) {
+                return ResponseEntity.badRequest().body("❌ User sudah meminjam maksimal 2 buku!");
+            }
+
+            // Cek stok buku
+            Buku bukuDipinjam = buku.get();
+            if (bukuDipinjam.getStok() <= 0) {
+                return ResponseEntity.badRequest().body("❌ Stok buku tidak tersedia!");
+            }
+
+            // Validasi status pengembalian dari Enum (Kalau diisi)
+            StatusPengembalianEnum statusEnum = null; // Default null
+            if (peminjamanDTO.getStatusPengembalian() != null) {
+                try {
+                    statusEnum = StatusPengembalianEnum.valueOf(peminjamanDTO.getStatusPengembalian().toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    return ResponseEntity.badRequest().body("❌ Status pengembalian tidak valid!");
+                }
+            }
+
+            // 🔥 Validasi status peminjaman dari Enum (Kalau diisi)
+            StatusPeminjamanEnum statusPeminjamanEnum = StatusPeminjamanEnum.DIAJUKAN; // Default "DIAJUKAN"
+            if (peminjamanDTO.getStatusPeminjaman() != null) {
+                try {
+                    statusPeminjamanEnum = StatusPeminjamanEnum.valueOf(peminjamanDTO.getStatusPeminjaman().toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    return ResponseEntity.badRequest().body("❌ Status peminjaman tidak valid!");
+                }
             }
 
             // Simpan peminjaman baru
             Peminjaman peminjaman = new Peminjaman();
             peminjaman.setUser(user.get());
-            peminjaman.setBuku(buku.get());
-            peminjaman.setStatusPengembalian(statusEnum);
-            peminjaman.setStatusPembayaran(statusPembayaranPeminjaman);
+            peminjaman.setBuku(bukuDipinjam);
+            peminjaman.setStatusPengembalian(statusEnum); // Bisa null
+            peminjaman.setStatusPeminjaman(statusPeminjamanEnum); // Bisa "DIAJUKAN", "DISETUJUI", atau "DITOLAK"
             peminjaman.setCreatedBy("erlan");
             peminjaman.setTanggalPinjam(peminjamanDTO.getTanggalPinjam());
-            peminjaman.setTanggalKembali(peminjamanDTO.getTanggalKembali());
-
-            // Kurangi stok buku
-            Buku bukuDipinjam = buku.get();
-            bukuDipinjam.setStok(bukuDipinjam.getStok() - 1);
-            bukuRepo.save(bukuDipinjam);
+            peminjaman.setTanggalKembali(peminjamanDTO.getTanggalPinjam().plusDays(7));
 
             peminjamanRepo.save(peminjaman);
             return GlobalResponse.dataBerhasilDisimpan(request);
@@ -101,11 +128,13 @@ public class PeminjamanService implements IService<ValPeminjamanDTO> {
     }
 
 
-    @Override
+
+
     @Transactional
     public ResponseEntity<Object> update(Long id, ValPeminjamanDTO peminjamanDTO, HttpServletRequest request) {
         try {
-            if (peminjamanDTO == null) {
+            // ✅ Validasi input awal
+            if (peminjamanDTO == null || peminjamanDTO.getStatusPeminjaman() == null) {
                 return GlobalResponse.dataTidakValid("FVAUT03011", request);
             }
 
@@ -115,169 +144,238 @@ public class PeminjamanService implements IService<ValPeminjamanDTO> {
                 return GlobalResponse.dataTidakDitemukan(request);
             }
             Peminjaman peminjaman = peminjamanOptional.get();
-            StatusPengembalianEnum statusLama = peminjaman.getStatusPengembalian();
-
-            StatusPembayaran statusPembayaranPeminjaman;
-            if (peminjamanDTO.getStatusPembayaran() != null) {
-                try {
-                    statusPembayaranPeminjaman = peminjamanDTO.getStatusPembayaran();
-                } catch (IllegalArgumentException e) {
-                    return ResponseEntity.badRequest().body("❌ Status pembayaran tidak valid!");
-                }
-            } else {
-                statusPembayaranPeminjaman = peminjaman.getStatusPembayaran();
+            Optional<Buku> bukuOptional = bukuRepo.findById(peminjamanDTO.getIdBuku());
+            if (bukuOptional.isEmpty()) {
+                return ResponseEntity.badRequest().body("❌ Buku tidak ditemukan!");
             }
+            Buku bukuUpdate = bukuOptional.get();
 
-            // ✅ Validasi data user & buku
-            Optional<User> user = userRepo.findById(peminjamanDTO.getIdUser());
-            Optional<Buku> buku = bukuRepo.findById(peminjamanDTO.getIdBuku());
-            if (user.isEmpty() || buku.isEmpty()) {
-                return GlobalResponse.dataTidakDitemukan(request);
-            }
-
-            // ✅ Validasi status pengembalian dari Enum
-            if (peminjamanDTO.getStatusPengembalian() == null || peminjamanDTO.getStatusPengembalian().isEmpty()) {
-                return ResponseEntity.badRequest().body("❌ Status pengembalian tidak boleh kosong!");
-            }
-
-            // Hardcode user untuk sementara
-            String currentUser = "SYSTEM";
-
-            // ✅ Validasi tanggal kembali
-            LocalDate tanggalKembali = peminjamanDTO.getTanggalKembali();
-            if (tanggalKembali != null && tanggalKembali.isBefore(peminjaman.getTanggalPinjam())) {
-                return ResponseEntity.badRequest().body("❌ Tanggal kembali tidak boleh sebelum tanggal pinjam");
-            }
-
-            // ✅ Hitung keterlambatan
-            LocalDate batasPengembalian = peminjaman.getTanggalPinjam().plusDays(7);
-            long daysLate = (tanggalKembali != null && tanggalKembali.isAfter(batasPengembalian)) ?
-                    ChronoUnit.DAYS.between(batasPengembalian, tanggalKembali) : 0;
-
-            // ✅ Tentukan status berdasarkan keterlambatan
-            String requestedStatus = peminjamanDTO.getStatusPengembalian().toUpperCase();
-            StatusPengembalianEnum statusBaru;
-
-// 🔹 Set status yang hanya boleh digunakan jika benar-benar terlambat
-            Set<StatusPengembalianEnum> statusTerlambat = Set.of(
-                    StatusPengembalianEnum.TERLAMBAT,
-                    StatusPengembalianEnum.RUSAK_RINGAN_TERLAMBAT,
-                    StatusPengembalianEnum.RUSAK_BERAT_TERLAMBAT,
-                    StatusPengembalianEnum.HILANG_TERLAMBAT
-            );
-
+            // ✅ Konversi status dari String ke Enum dengan validasi
+            StatusPeminjamanEnum statusPeminjamanBaru;
             try {
-                statusBaru = StatusPengembalianEnum.valueOf(requestedStatus);
-
-                // 🔹 Cek apakah status yang dimasukkan adalah status terlambat
-                if (statusTerlambat.contains(statusBaru) && daysLate <= 0) {
-                    return ResponseEntity.badRequest().body("❌ Status pengembalian '" + statusBaru + "' hanya boleh digunakan jika pengembalian terlambat.");
-                }
+                statusPeminjamanBaru = StatusPeminjamanEnum.valueOf(peminjamanDTO.getStatusPeminjaman().toUpperCase());
             } catch (IllegalArgumentException e) {
-                return ResponseEntity.badRequest().body("❌ Status pengembalian tidak valid!");
+                return GlobalResponse.dataTidakValid("INVALID_STATUS", request);
             }
 
-            // ✅ Validasi tanggal kembali wajib untuk status tertentu
-            if ((statusBaru == StatusPengembalianEnum.DIKEMBALIKAN ||
-                    statusBaru == StatusPengembalianEnum.TERLAMBAT ||
-                    statusBaru.name().contains("_TERLAMBAT")) && tanggalKembali == null) {
-                return ResponseEntity.badRequest().body("❌ Tanggal kembali wajib diisi untuk status ini");
+            // ✅ Jika status saat ini DITOLAK, tidak boleh diubah lagi
+            if (peminjaman.getStatusPeminjaman() == StatusPeminjamanEnum.DITOLAK) {
+                return GlobalResponse.dataTidakValid("INVALID_STATUS_REJECTED", request);
             }
 
-            // ✅ Update data peminjaman
-            peminjaman.setUser(user.get());
-            peminjaman.setBuku(buku.get());
-            peminjaman.setStatusPengembalian(statusBaru);
-            peminjaman.setTanggalKembali(tanggalKembali);
-            peminjaman.setStatusPembayaran(statusPembayaranPeminjaman);
-            peminjaman.setUpdatedBy(currentUser);
-            peminjaman.setUpdatedDate(LocalDate.now());
-
-            // ✅ Proses perubahan stok buku
-            // ✅ Proses perubahan stok buku
-            Buku bukuUpdate = buku.get();
-            if (!statusBaru.equals(statusLama)) {
-
-                // 🔹 Set status yang menambah stok
-                Set<StatusPengembalianEnum> statusMenambahStok = Set.of(
-                        StatusPengembalianEnum.DIKEMBALIKAN,
-                        StatusPengembalianEnum.TERLAMBAT,
-                        StatusPengembalianEnum.RUSAK_RINGAN,
-                        StatusPengembalianEnum.RUSAK_RINGAN_TERLAMBAT,
-                        StatusPengembalianEnum.DIGANTI
-                );
-
-                // 🔹 Set status yang mengurangi stok
-                Set<StatusPengembalianEnum> statusMengurangiStok = Set.of(
-                        StatusPengembalianEnum.HILANG,
-                        StatusPengembalianEnum.HILANG_TERLAMBAT,
-                        StatusPengembalianEnum.RUSAK_BERAT_TERLAMBAT,
-                        StatusPengembalianEnum.RUSAK_BERAT
-                );
-
-                // 🔹 Hanya perlu menghandle status baru
-                if (statusMenambahStok.contains(statusBaru)) {
-                    bukuUpdate.setStok(bukuUpdate.getStok() + 1);
-                } else if (statusMengurangiStok.contains(statusBaru)) {
-                    bukuUpdate.setStok(bukuUpdate.getStok() - 1);
+            // ✅ Jika status peminjaman masih DIAJUKAN
+            if (peminjaman.getStatusPeminjaman() == StatusPeminjamanEnum.DIAJUKAN || peminjaman.getStatusPeminjaman() == StatusPeminjamanEnum.DISETUJUI) {
+                if (statusPeminjamanBaru == StatusPeminjamanEnum.DITOLAK) {
+                    peminjaman.setStatusPeminjaman(StatusPeminjamanEnum.DITOLAK);
+                    peminjaman.setUpdatedBy("erlan");
+                    peminjaman.setUpdatedDate(LocalDate.now());
+                    peminjamanRepo.save(peminjaman);
+                    return GlobalResponse.dataBerhasilDiubah(request);
                 }
 
-                // ✅ Simpan perubahan stok hanya jika benar-benar ada perubahan
-                bukuRepo.save(bukuUpdate);
-            }
+                if (statusPeminjamanBaru == StatusPeminjamanEnum.DISETUJUI) {
+                    StatusPengembalianEnum statusLama = peminjaman.getStatusPengembalian();
+                    StatusPembayaran statusPembayaranPeminjaman;
+
+                    if (peminjamanDTO.getStatusPembayaran() != null) {
+                        try {
+                            statusPembayaranPeminjaman = peminjamanDTO.getStatusPembayaran();
+                        } catch (IllegalArgumentException e) {
+                            return ResponseEntity.badRequest().body("❌ Status pembayaran tidak valid!");
+                        }
+                    } else {
+                        statusPembayaranPeminjaman = peminjaman.getStatusPembayaran();
+                    }
+
+                    // ✅ Validasi status pengembalian dari Enum
+                    if (peminjamanDTO.getStatusPengembalian() == null || peminjamanDTO.getStatusPengembalian().isEmpty()) {
+                        return ResponseEntity.badRequest().body("❌ Status pengembalian tidak boleh kosong!");
+                    }
+
+                    // Hardcode user untuk sementara
+                    String currentUser = "SYSTEM";
+
+                    // ✅ Validasi tanggal kembali
+                    LocalDate tanggalKembali = peminjamanDTO.getTanggalKembali();
+                    if (tanggalKembali != null && tanggalKembali.isBefore(peminjaman.getTanggalPinjam())) {
+                        return ResponseEntity.badRequest().body("❌ Tanggal kembali tidak boleh sebelum tanggal pinjam");
+                    }
+
+                    // ✅ Hitung keterlambatan
+                    LocalDate batasPengembalian = peminjaman.getTanggalPinjam().plusDays(7);
+                    long daysLate = (tanggalKembali != null && tanggalKembali.isAfter(batasPengembalian)) ?
+                            ChronoUnit.DAYS.between(batasPengembalian, tanggalKembali) : 0;
+
+                    String requestedStatus = peminjamanDTO.getStatusPengembalian().toUpperCase();
+                    StatusPengembalianEnum statusBaru;
+
+// Set untuk status yang valid
+                    Set<StatusPengembalianEnum> validStatus = Set.of(
+                            StatusPengembalianEnum.DIPINJAM,
+                            StatusPengembalianEnum.DIKEMBALIKAN,
+                            StatusPengembalianEnum.DIKEMBALIKAN_TERLAMBAT,
+                            StatusPengembalianEnum.DIKEMBALIKAN_RUSAK_RINGAN,
+                            StatusPengembalianEnum.DIKEMBALIKAN_RUSAK_BERAT,
+                            StatusPengembalianEnum.HILANG
+                    );
+
+                    // Konversi dan validasi status yang diminta
+                    StatusPengembalianEnum requestedEnum = StatusPengembalianEnum.valueOf(requestedStatus);
+                    if (!validStatus.contains(requestedEnum)) {
+                        return ResponseEntity.badRequest().body("❌ Status pengembalian tidak valid");
+                    }
+                    // Tambahkan validasi keterlambatan di sini
+                    if (requestedEnum == StatusPengembalianEnum.DIKEMBALIKAN && daysLate > 0) {
+                        return ResponseEntity.badRequest().body("❌ Status pengembalian 'DIKEMBALIKAN' tidak dapat digunakan jika terlambat. Gunakan status 'DIKEMBALIKAN_TERLAMBAT'.");
+                    }
+                    // Logika untuk status pengembalian
+                    if (daysLate > 0) {
+                        // Jika terlambat dan status DIKEMBALIKAN, ubah ke DIKEMBALIKAN_TERLAMBAT
+                        if (requestedEnum == StatusPengembalianEnum.DIKEMBALIKAN) {
+                            statusBaru = StatusPengembalianEnum.DIKEMBALIKAN_TERLAMBAT;
+                        } else {
+                            // Untuk status lain (rusak/hilang), tetap gunakan status yang diminta
+                            statusBaru = requestedEnum;
+                        }
+                    } else {
+                        // Tidak terlambat, gunakan status yang diminta
+                        statusBaru = requestedEnum;
+                    }
 
 
-            // ✅ Proses denda
-            BigDecimal jumlahDenda = dendaService.hitungDenda(peminjaman);
-            Optional<Denda> existingDenda = dendaRepo.findByPeminjaman(peminjaman);
-            if (statusPembayaranPeminjaman == null) {
-                statusPembayaranPeminjaman = StatusPembayaran.BELUM_DIBAYAR;  // Default jika null
-            }
 
-            // Jika status pembayaran sudah diatur dari request, gunakan nilai itu
-            if (statusPembayaranPeminjaman == null) {
-                if (statusBaru == StatusPengembalianEnum.DIKEMBALIKAN && jumlahDenda.compareTo(BigDecimal.ZERO) == 0) {
-                    statusPembayaranPeminjaman = StatusPembayaran.LUNAS;
-                } else {
-                    statusPembayaranPeminjaman = StatusPembayaran.BELUM_DIBAYAR;
+
+                    // ✅ Update data peminjaman
+                    peminjaman.setStatusPeminjaman(statusPeminjamanBaru);
+                    peminjaman.setStatusPengembalian(statusBaru);
+                    peminjaman.setTanggalKembali(tanggalKembali);
+                    peminjaman.setStatusPembayaran(statusPembayaranPeminjaman);
+                    peminjaman.setUpdatedBy(currentUser);
+                    peminjaman.setUpdatedDate(LocalDate.now());
+
+                    if (!statusBaru.equals(statusLama)) {  // Hanya proses jika ada perubahan status
+                        Set<StatusPengembalianEnum> statusMenambahStok = Set.of(
+                                StatusPengembalianEnum.DIKEMBALIKAN,
+                                StatusPengembalianEnum.DIKEMBALIKAN_TERLAMBAT,
+                                StatusPengembalianEnum.DIKEMBALIKAN_RUSAK_RINGAN
+                        );
+
+                        Set<StatusPengembalianEnum> statusMengurangiStok = Set.of(
+                                StatusPengembalianEnum.HILANG,
+                                StatusPengembalianEnum.DIKEMBALIKAN_RUSAK_BERAT
+                        );
+
+                        // **Jika status berubah ke DIPINJAM**
+                        if (statusBaru == StatusPengembalianEnum.DIPINJAM) {
+                            if (statusLama != StatusPengembalianEnum.DIPINJAM &&
+                                    statusLama != StatusPengembalianEnum.HILANG &&
+                                    statusLama != StatusPengembalianEnum.DIKEMBALIKAN_RUSAK_BERAT) {
+                                if (bukuUpdate.getStok() > 0) {
+                                    bukuUpdate.setStok(bukuUpdate.getStok() - 1);
+                                }
+                            }
+                        }
+                        // **Jika status berubah ke DIKEMBALIKAN, pastikan stok bertambah**
+                        else if (statusMenambahStok.contains(statusBaru)) {
+                            if (statusLama == StatusPengembalianEnum.DIPINJAM ||
+                                    statusLama == StatusPengembalianEnum.HILANG ||
+                                    statusLama == StatusPengembalianEnum.DIKEMBALIKAN_RUSAK_BERAT) {
+                                bukuUpdate.setStok(bukuUpdate.getStok() + 1);
+                            }
+                        }
+                        // **Jika status berubah ke HILANG atau RUSAK BERAT, pastikan stok dikurangi dengan benar**
+                        else if (statusMengurangiStok.contains(statusBaru)) {
+                            if (statusLama == StatusPengembalianEnum.DIPINJAM) {
+                                // Tidak perlu menambah/kurangi stok karena buku sudah berkurang saat dipinjam
+                            } else if (statusMenambahStok.contains(statusLama)) {
+                                // Jika sebelumnya sudah dikembalikan, kurangi stok
+                                bukuUpdate.setStok(bukuUpdate.getStok() - 1);
+                            }
+                        }
+
+                        bukuRepo.save(bukuUpdate);
+                    }
+
+
+                    BigDecimal jumlahDenda;
+
+// Proses denda berdasarkan status pembayaran dan semua jenis status pengembalian
+                    if (statusPembayaranPeminjaman == StatusPembayaran.LUNAS) {
+                        // Untuk status LUNAS, tetap hitung denda untuk semua status pengembalian
+                        jumlahDenda = dendaService.hitungDenda(peminjaman);
+
+                        // Khusus untuk DIKEMBALIKAN, cek keterlambatan
+                        if (statusBaru == StatusPengembalianEnum.DIKEMBALIKAN && daysLate > 0) {
+                            statusBaru = StatusPengembalianEnum.DIKEMBALIKAN_TERLAMBAT;
+                        }
+                    } else {
+                        // Untuk status belum LUNAS
+                        switch (statusBaru) {
+                            case DIKEMBALIKAN:
+                                if (daysLate > 0) {
+                                    statusBaru = StatusPengembalianEnum.DIKEMBALIKAN_TERLAMBAT;
+                                    jumlahDenda = dendaService.hitungDenda(peminjaman);
+                                } else {
+                                    jumlahDenda = BigDecimal.ZERO;
+                                    statusPembayaranPeminjaman = StatusPembayaran.LUNAS;
+                                }
+                                break;
+
+                            case DIKEMBALIKAN_RUSAK_RINGAN:
+                            case DIKEMBALIKAN_RUSAK_BERAT:
+                            case HILANG:
+                                jumlahDenda = dendaService.hitungDenda(peminjaman);
+                                break;
+
+                            default:
+                                jumlahDenda = dendaService.hitungDenda(peminjaman);
+                                break;
+                        }
+                    }
+
+// Sisanya tetap sama seperti kode sebelumnya
+                    if (statusPembayaranPeminjaman == null) {
+                        statusPembayaranPeminjaman = jumlahDenda.compareTo(BigDecimal.ZERO) == 0
+                                ? StatusPembayaran.LUNAS
+                                : StatusPembayaran.BELUM_DIBAYAR;
+                    }
+
+                    peminjaman.setStatusPembayaran(statusPembayaranPeminjaman);
+                    peminjamanRepo.save(peminjaman);
+
+// Proses penyimpanan denda
+                    Optional<Denda> existingDenda = dendaRepo.findByPeminjaman(peminjaman);
+                    if (existingDenda.isPresent()) {
+                        Denda denda = existingDenda.get();
+                        denda.setJumlahDenda(jumlahDenda);
+                        denda.setTanggalDenda(LocalDate.now());
+                        denda.setUpdatedBy(currentUser);
+                        denda.setUpdatedDate(LocalDate.now());
+                        denda.setStatusPembayaran(peminjaman.getStatusPembayaran());
+                        dendaRepo.save(denda);
+                    } else {
+                        Denda dendaBaru = new Denda();
+                        dendaBaru.setPeminjaman(peminjaman);
+                        dendaBaru.setJumlahDenda(jumlahDenda);
+                        dendaBaru.setTanggalDenda(LocalDate.now());
+                        dendaBaru.setCreatedBy(currentUser);
+                        dendaBaru.setCreatedDate(LocalDate.now());
+                        dendaBaru.setUpdatedBy(currentUser);
+                        dendaBaru.setUpdatedDate(LocalDate.now());
+                        dendaBaru.setStatusPembayaran(peminjaman.getStatusPembayaran());
+                        dendaRepo.save(dendaBaru);
+                    }
+                    // 🔹 Simpan perubahan peminjaman
+                    peminjamanRepo.save(peminjaman);
+                    return GlobalResponse.dataBerhasilDiubah(request);
                 }
             }
-
-// ✅ Simpan status pembayaran yang diperbarui
-            peminjaman.setStatusPembayaran(statusPembayaranPeminjaman);
-
-
-            peminjamanRepo.save(peminjaman);
-            if (existingDenda.isPresent()) {
-                Denda denda = existingDenda.get();
-                denda.setJumlahDenda(jumlahDenda);
-                denda.setTanggalDenda(LocalDate.now());
-                denda.setUpdatedBy(currentUser);
-                denda.setUpdatedDate(LocalDate.now());
-                denda.setStatusPembayaran(peminjaman.getStatusPembayaran());
-                dendaRepo.save(denda);
-            } else {
-                Denda dendaBaru = new Denda();
-                dendaBaru.setPeminjaman(peminjaman);
-                dendaBaru.setJumlahDenda(jumlahDenda);
-                dendaBaru.setTanggalDenda(LocalDate.now());
-                dendaBaru.setCreatedBy(currentUser);
-                dendaBaru.setCreatedDate(LocalDate.now());
-                dendaBaru.setUpdatedBy(currentUser);
-                dendaBaru.setUpdatedDate(LocalDate.now());
-                dendaBaru.setStatusPembayaran(peminjaman.getStatusPembayaran());
-                dendaRepo.save(dendaBaru);
-            }
-
-            return GlobalResponse.dataBerhasilDiubah(request);
-
+            return GlobalResponse.dataTidakValid("INVALID_STATUS_UPDATE", request);
         } catch (Exception e) {
             LoggingFile.logException("PeminjamanService", "update", e, OtherConfig.getEnableLogFile());
             return GlobalResponse.dataGagalDiubah("FEAUT03011", request);
         }
     }
-
-
 
     @Override
     public ResponseEntity<Object> delete(Long id, HttpServletRequest request) {
@@ -391,7 +489,11 @@ public class PeminjamanService implements IService<ValPeminjamanDTO> {
         if (peminjaman.getBuku() != null) {
             respPeminjamanDTO.setBuku(new RespBukuDTO(
                     peminjaman.getBuku().getId(),
-                    peminjaman.getBuku().getJudul()
+                    peminjaman.getBuku().getJudul(),
+                    peminjaman.getBuku().getPenulis(),   // ✅ Sesuai urutan constructor
+                    peminjaman.getBuku().getHarga(),     // ✅ Pastikan harga bertipe BigDecimal
+                    peminjaman.getBuku().getLinkImage()
+
             ));
         }
 

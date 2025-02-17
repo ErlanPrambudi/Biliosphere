@@ -1,6 +1,7 @@
 package com.example.biliosphere2.model;
 
 import com.example.biliosphere2.model.enums.StatusPembayaran;
+import com.example.biliosphere2.model.enums.StatusPeminjamanEnum;
 import com.example.biliosphere2.model.enums.StatusPengembalianEnum;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -37,8 +38,13 @@ public class Peminjaman {
     @Column(name = "status_pengembalian")
     private StatusPengembalianEnum statusPengembalian;
 
+    @Enumerated(EnumType.STRING) // Simpan enum sebagai string di database
+    @Column(name = "status_peminjaman")
+    private StatusPeminjamanEnum statusPeminjaman;
+
     @OneToOne(mappedBy = "peminjaman", cascade = CascadeType.ALL, orphanRemoval = true)
     private Denda denda;
+
     @Column(name = "status_pembayaran")
     @Enumerated(EnumType.STRING)
     private StatusPembayaran statusPembayaran;
@@ -57,7 +63,10 @@ public class Peminjaman {
     @Column(name = "updatedDate")
     private LocalDate updatedDate;
 
-
+    public Peminjaman() {
+        this.statusPembayaran = StatusPembayaran.BELUM_DIBAYAR;
+        this.statusPeminjaman = StatusPeminjamanEnum.DIAJUKAN;
+    }
 
     public Long getId() {
         return id;
@@ -69,6 +78,14 @@ public class Peminjaman {
 
     public User getUser() {
         return user;
+    }
+
+    public StatusPeminjamanEnum getStatusPeminjaman() {
+        return statusPeminjaman;
+    }
+
+    public void setStatusPeminjaman(StatusPeminjamanEnum statusPeminjaman) {
+        this.statusPeminjaman = statusPeminjaman;
     }
 
     public StatusPembayaran getStatusPembayaran() {

@@ -59,12 +59,12 @@ public class Crypto {
     }
 
 //    public static void main(String[] args) {
-//        String strToEncrypt = "";
+//        String strToEncrypt = "Q9wL2_KESW41iYyQXBOzKv7Iq9g";
 //        System.out.println("Encryption Result : "+performEncrypt(strToEncrypt));
 //
-//        String strToDecrypt = "ertyu";//put text to decrypt in here
-//      String decriptionResult = new Crypto().performDecrypt(strToDecrypt);
-//        System.out.println("Decryption Result : "+performDecrypt(strToDecrypt));
+////        String strToDecrypt = "ertyu";//put text to decrypt in here
+////      String decriptionResult = new Crypto().performDecrypt(strToDecrypt);
+////        System.out.println("Decryption Result : "+performDecrypt(strToDecrypt));
 //    }
 }
 
